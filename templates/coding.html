@@ -1,0 +1,111 @@
+{% extends "base.html" %}
+
+{% block title %}Coding Activity - Nexus{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <h1>Coding Activity Tracker</h1>
+    <p>Track your programming progress across multiple platforms.</p>
+</div>
+
+<div class="module-layout">
+    <!-- Add Stat Form -->
+    <div class="form-panel glass-panel" style="height: fit-content;">
+        <h3 class="panel-header"><i class="fa-solid fa-code"></i> Log Progress</h3>
+        <form method="POST" action="{{ url_for('coding') }}">
+            <div class="form-group">
+                <label for="platform">Platform</label>
+                <select id="platform" name="platform" class="form-control no-icon" required
+                    title="Select the coding platform you want to update.">
+                    <option value="LeetCode">LeetCode</option>
+                    <option value="HackerRank">HackerRank</option>
+                    <option value="Codeforces">Codeforces</option>
+                    <option value="CodeChef">CodeChef</option>
+                    <option value="Other">Other</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="problems_solved">Total Problems Solved</label>
+                <input type="number" id="problems_solved" name="problems_solved" class="form-control" required min="0"
+                    placeholder="e.g. 150" title="The total number of problems you've solved on this platform.">
+            </div>
+            <div class="form-group">
+                <label for="rating">Current Rating / Rank (optional)</label>
+                <input type="number" id="rating" name="rating" class="form-control"
+                    placeholder="e.g. 1500 (leave blank if N/A)"
+                    title="Your current numeric rating or rank on this platform.">
+            </div>
+            <button type="submit" class="btn-primary" style="width: 100%; margin-top: 1rem;">Update Profile</button>
+        </form>
+    </div>
+
+    <!-- Stats Display -->
+    <div class="list-panel glass-panel">
+        <h3 class="panel-header"><i class="fa-solid fa-chart-line"></i> Your Coding Profiles</h3>
+
+        {% if stats %}
+        <div class="dashboard-grid coding-grid">
+            {% for stat in stats %}
+            <div class="stat-card coding-stat-card glass-panel">
+
+                <form method="POST" action="{{ url_for('delete_coding', id=stat.id) }}"
+                    style="position: absolute; top: 1rem; right: 1rem;">
+                    <button type="submit" class="glass-btn"
+                        style="padding: 0.25rem 0.5rem; color: var(--danger); background: transparent; border: none; font-size: 1.1rem;">
+                        <i class="fa-solid fa-xmark"></i>
+                    </button>
+                </form>
+
+                <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 0.5rem;">
+                    <div class="coding-platform-icon">
+                        {% set p = stat.platform.lower() %}
+                        {% if p == 'leetcode' %}
+                        <i class="fa-solid fa-laptop-code"></i>
+                        {% elif p == 'hackerrank' %}
+                        <i class="fa-brands fa-hackerrank"></i>
+                        {% elif p == 'codeforces' %}
+                        <i class="fa-solid fa-chart-simple"></i>
+                        {% else %}
+                        <i class="fa-solid fa-terminal"></i>
+                        {% endif %}
+                    </div>
+                    <h3 style="font-size: 1.25rem;">{{ stat.platform }}</h3>
+                </div>
+
+                <div class="coding-stat-row">
+                    <div>
+                        <p style="font-size: 0.85rem; color: var(--text-secondary);">Solved</p>
+                        <p style="font-size: 1.5rem; font-weight: 700; color: var(--text-primary);">{{
+                            stat.problems_solved }}</p>
+                    </div>
+                    {% if stat.rating and stat.rating > 0 %}
+                    <div style="text-align: right;">
+                        <p style="font-size: 0.85rem; color: var(--text-secondary);">Rating</p>
+                        <p style="font-size: 1.5rem; font-weight: 700; color: var(--warning);">{{ stat.rating }}</p>
+                    </div>
+                    {% endif %}
+                </div>
+
+                <div style="margin-top: auto; padding-top: 1rem;">
+                    {% if stat.problems_solved > 200 %}
+                    <span class="badge success" style="width: 100%; text-align: center; display: block;"><i
+                            class="fa-solid fa-fire"></i> Advanced</span>
+                    {% elif stat.problems_solved > 50 %}
+                    <span class="badge warning"
+                        style="width: 100%; text-align: center; display: block;">Intermediate</span>
+                    {% else %}
+                    <span class="badge coding-badge-beginner">Beginner</span>
+                    {% endif %}
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        {% else %}
+        <div class="empty-state">
+            <i class="fa-solid fa-laptop-code"></i>
+            <p>No coding profiles linked. Start tracking by adding a platform!</p>
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

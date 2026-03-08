@@ -1,0 +1,124 @@
+{% extends "base.html" %}
+
+{% block title %}To-Do List - Nexus{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <h1><i class="fa-solid fa-list-check" style="margin-right: 10px; color: var(--accent-primary);"></i>To-Do List</h1>
+    <p>Organize your academic goals and daily tasks.</p>
+</div>
+
+<div class="module-layout">
+    <!-- Add Task Form -->
+    <div class="form-panel glass-panel" style="height: fit-content;">
+        <h3 class="panel-header"><i class="fa-solid fa-plus"></i> New Goal</h3>
+        <form method="POST" action="{{ url_for('todo') }}">
+            <div class="form-group">
+                <label for="task">Description</label>
+                <input type="text" id="task" name="task" class="form-control" required
+                    placeholder="What needs to be done?" title="Describe the specific task or goal you want to achieve."
+                    minlength="3">
+            </div>
+            <div class="form-group">
+                <label for="type">Goal Type</label>
+                <select id="type" name="type" class="form-control no-icon" required
+                    title="Choose a priority level/duration for this goal.">
+                    <option value="daily">Daily Task</option>
+                    <option value="weekly">Weekly Goal</option>
+                    <option value="monthly">Monthly Target</option>
+                </select>
+            </div>
+            <button type="submit" class="btn-primary" style="width: 100%; margin-top: 1rem;">Add Task</button>
+        </form>
+    </div>
+
+    <!-- Tasks List -->
+    <div class="list-panel glass-panel">
+        <h3 class="panel-header"><i class="fa-solid fa-clipboard-list"></i> Your Tasks</h3>
+
+        {% set pending = todos|selectattr("completed", "equalto", false)|list %}
+        {% set completed = todos|selectattr("completed", "equalto", true)|list %}
+
+        <div class="tabs" style="display: flex; gap: 1rem; margin-bottom: 1.5rem;">
+            <button type="button" class="glass-btn active-tab" data-tab="pending" onclick="showTab('pending')">Pending ({{ pending|length }})</button>
+            <button type="button" class="glass-btn" data-tab="completed" onclick="showTab('completed')">Completed ({{ completed|length }})</button>
+        </div>
+
+        <div id="pending-tasks" class="record-list">
+            {% if pending %}
+            {% for task in pending %}
+            <div class="record-item" style="border-left: 4px solid var(--warning);">
+                <div class="record-info">
+                    <h4>{{ task.task }}</h4>
+                    <p><span class="badge"
+                            style="background: var(--bg-tertiary); color: var(--text-secondary); margin-right: 0.5rem;">{{
+                            task.type|capitalize }}</span> Added on {{ task.date_added.strftime('%b %d, %Y') }}</p>
+                </div>
+                <div class="record-actions">
+                    <form method="POST" action="{{ url_for('toggle_todo', id=task.id) }}">
+                        <button type="submit" class="glass-btn" style="color: var(--success);" title="Mark as Done">
+                            <i class="fa-solid fa-check"></i>
+                        </button>
+                    </form>
+                    <form method="POST" action="{{ url_for('delete_todo', id=task.id) }}">
+                        <button type="submit" class="glass-btn" style="color: var(--danger);" title="Delete">
+                            <i class="fa-solid fa-trash"></i>
+                        </button>
+                    </form>
+                </div>
+            </div>
+            {% endfor %}
+            {% else %}
+            <div class="empty-state">
+                <i class="fa-solid fa-clipboard-check"></i>
+                <p>All caught up! Excellent work.</p>
+            </div>
+            {% endif %}
+        </div>
+
+        <div id="completed-tasks" class="record-list" style="display: none;">
+            {% if completed %}
+            {% for task in completed %}
+            <div class="record-item" style="border-left: 4px solid var(--success); opacity: 0.7;">
+                <div class="record-info">
+                    <h4 style="text-decoration: line-through; color: var(--text-muted);">{{ task.task }}</h4>
+                    <p><span class="badge"
+                            style="background: var(--bg-tertiary); color: var(--text-secondary); margin-right: 0.5rem;">{{
+                            task.type|capitalize }}</span> Completed</p>
+                </div>
+                <div class="record-actions">
+                    <form method="POST" action="{{ url_for('toggle_todo', id=task.id) }}">
+                        <button type="submit" class="glass-btn" style="color: var(--warning);" title="Undo">
+                            <i class="fa-solid fa-rotate-left"></i>
+                        </button>
+                    </form>
+                    <form method="POST" action="{{ url_for('delete_todo', id=task.id) }}">
+                        <button type="submit" class="glass-btn" style="color: var(--danger);" title="Delete">
+                            <i class="fa-solid fa-trash"></i>
+                        </button>
+                    </form>
+                </div>
+            </div>
+            {% endfor %}
+            {% else %}
+            <div class="empty-state">
+                <i class="fa-solid fa-check-double"></i>
+                <p>No completed tasks yet.</p>
+            </div>
+            {% endif %}
+        </div>
+
+    </div>
+</div>
+
+<script>
+    function showTab(tabName) {
+        document.getElementById('pending-tasks').style.display = tabName === 'pending' ? 'flex' : 'none';
+        document.getElementById('completed-tasks').style.display = tabName === 'completed' ? 'flex' : 'none';
+
+        document.querySelectorAll('.tabs .glass-btn').forEach(btn => {
+            btn.classList.toggle('active-tab', btn.dataset.tab === tabName);
+        });
+    }
+</script>
+{% endblock %}
