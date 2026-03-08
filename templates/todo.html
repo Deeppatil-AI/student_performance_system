@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 
-{% block title %}To-Do List - Nexus{% endblock %}
+{% block title %}To-Do List - Student Diary{% endblock %}
 
 {% block content %}
 <div class="page-header">
@@ -40,8 +40,10 @@
         {% set completed = todos|selectattr("completed", "equalto", true)|list %}
 
         <div class="tabs" style="display: flex; gap: 1rem; margin-bottom: 1.5rem;">
-            <button type="button" class="glass-btn active-tab" data-tab="pending" onclick="showTab('pending')">Pending ({{ pending|length }})</button>
-            <button type="button" class="glass-btn" data-tab="completed" onclick="showTab('completed')">Completed ({{ completed|length }})</button>
+            <button type="button" class="glass-btn active-tab" data-tab="pending" onclick="showTab('pending')">Pending
+                ({{ pending|length }})</button>
+            <button type="button" class="glass-btn" data-tab="completed" onclick="showTab('completed')">Completed ({{
+                completed|length }})</button>
         </div>
 
         <div id="pending-tasks" class="record-list">

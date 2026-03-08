@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 
-{% block title %}Attendance Tracker - Nexus{% endblock %}
+{% block title %}Attendance Tracker - Student Diary{% endblock %}
 
 {% block content %}
 <div class="page-header">
@@ -33,7 +33,7 @@
     {% endif %}
 </div>
 
-{% if not user.branch_id %}
+{% if not user.branch %}
 <div class="glass-panel" style="padding: 3rem; text-align: center;">
     <i class="fa-solid fa-exclamation-triangle"
         style="font-size: 3rem; color: var(--warning); margin-bottom: 1rem;"></i>
@@ -52,8 +52,7 @@
 {% else %}
 {% if is_future %}
 <div class="glass-panel" style="padding: 3rem; text-align: center;">
-    <i class="fa-solid fa-calendar-xmark"
-        style="font-size: 3rem; color: var(--warning); margin-bottom: 1rem;"></i>
+    <i class="fa-solid fa-calendar-xmark" style="font-size: 3rem; color: var(--warning); margin-bottom: 1rem;"></i>
     <h3>Future Date Selected</h3>
     <p style="color: var(--text-secondary); margin-top: 0.5rem;">
         You can only mark attendance for today or past dates.
@@ -189,7 +188,8 @@
     </p>
 
     {% if user.branch and user.branch.name == 'AIML' %}
-    <div class="legend-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 0.4rem 1.5rem; font-size: 0.9rem;">
+    <div class="legend-grid"
+        style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 0.4rem 1.5rem; font-size: 0.9rem;">
         <span><strong>PSI</strong> — Problem Solving &amp; Implementation</span>
         <span><strong>AI</strong> — Artificial Intelligence</span>
         <span><strong>DAA</strong> — Design &amp; Analysis of Algorithms</span>
@@ -203,7 +203,8 @@
     </div>
 
     {% elif user.branch and user.branch.name == 'AIDS' %}
-    <div class="legend-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 0.4rem 1.5rem; font-size: 0.9rem;">
+    <div class="legend-grid"
+        style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 0.4rem 1.5rem; font-size: 0.9rem;">
         <span><strong>BDA</strong> — Big Data Analytics</span>
         <span><strong>ML</strong> — Machine Learning</span>
         <span><strong>ADS</strong> — Advanced Data Structures</span>
@@ -217,7 +218,8 @@
     </div>
 
     {% elif user.branch and user.branch.name == 'IT' %}
-    <div class="legend-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 0.4rem 1.5rem; font-size: 0.9rem;">
+    <div class="legend-grid"
+        style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 0.4rem 1.5rem; font-size: 0.9rem;">
         <span><strong>CN</strong> — Computer Networks</span>
         <span><strong>WT</strong> — Web Technologies</span>
         <span><strong>ADBMS</strong> — Advanced Database Management Systems</span>
@@ -232,7 +234,8 @@
 
     {% else %}
     <p style="color: var(--text-secondary); font-size: 0.9rem;">
-        Branch information is missing, so subject expansions are not available.
+        Branch information is incomplete, so subject expansions are not available for your branch ({{ user.branch.name
+        if user.branch else 'None' }}).
     </p>
     {% endif %}
 </div>

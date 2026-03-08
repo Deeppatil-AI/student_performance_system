@@ -1,17 +1,18 @@
 {% extends "base.html" %}
 
-{% block title %}Dashboard - Nexus{% endblock %}
+{% block title %}Dashboard - Student Diary{% endblock %}
 
 {% block content %}
 <div class="page-header dashboard-header">
     <div class="page-header-main">
         <h1>Welcome, {{ user.full_name or user.username }}!</h1>
-        <p>Here is your performance snapshot.</p>
+        <p>Glad to see you back. Here's your performance snapshot.</p>
     </div>
     <div class="risk-card glass-panel">
         <div class="risk-badge-wrap">
             <span class="badge {{ risk_profile.color }} risk-badge">
-                <i class="fa-solid {% if risk_profile.level == 'High Risk' %}fa-triangle-exclamation{% elif risk_profile.level == 'Moderate Risk' %}fa-circle-exclamation{% else %}fa-check-circle{% endif %}"></i>
+                <i
+                    class="fa-solid {% if risk_profile.level == 'High Risk' %}fa-triangle-exclamation{% elif risk_profile.level == 'Moderate Risk' %}fa-circle-exclamation{% else %}fa-check-circle{% endif %}"></i>
                 {{ risk_profile.level }}
             </span>
         </div>
@@ -29,7 +30,7 @@
             <h3>Attendance Health</h3>
             <div class="stat-value"><span class="animate-count"
                     data-target="{{ '%.1f'|format(overall_attendance) }}">0</span>%</div>
-            {% if overall_attendance < 75 and overall_attendance > 0 %}
+            {% if overall_attendance < 75 and overall_attendance> 0 %}
                 <div class="stat-desc danger"><i class="fa-solid fa-triangle-exclamation"></i> Critical: Below 75%
                     Target</div>
                 {% elif overall_attendance == 0 %}
@@ -133,19 +134,22 @@
     const chartPlatforms = {{ chart_platforms | tojson | safe }};
     const chartProblems = {{ chart_problems | tojson | safe }};
 
-    const chartPrimary = 'rgba(13, 148, 136, 0.9)';
-    const chartSecondary = 'rgba(20, 184, 166, 0.8)';
-    const chartTertiary = 'rgba(45, 212, 191, 0.7)';
+    const chartPrimary = 'rgba(59, 130, 246, 0.9)';   // Blue 500
+    const chartSecondary = 'rgba(37, 99, 235, 0.8)'; // Blue 600
+    const chartTertiary = 'rgba(96, 165, 250, 0.7)';  // Blue 400
     const textColor = document.documentElement.getAttribute('data-theme') === 'light' ? '#475569' : '#e2e8f0';
     const gridColor = document.documentElement.getAttribute('data-theme') === 'light' ? 'rgba(0,0,0,0.06)' : 'rgba(255,255,255,0.06)';
     const tooltipBg = document.documentElement.getAttribute('data-theme') === 'light' ? 'rgba(255,255,255,0.98)' : 'rgba(26,29,36,0.98)';
+    const tooltipTextColor = document.documentElement.getAttribute('data-theme') === 'light' ? '#1e293b' : '#ffffff';
 
     const tooltipConfig = {
         backgroundColor: tooltipBg,
+        titleColor: tooltipTextColor,
+        bodyColor: tooltipTextColor,
         titleFont: { family: 'Source Sans 3', size: 13, weight: '600' },
         bodyFont: { family: 'Source Sans 3', size: 14 },
         padding: 12,
-        borderColor: 'rgba(13, 148, 136, 0.2)',
+        borderColor: 'rgba(37, 99, 235, 0.2)',
         borderWidth: 1,
         cornerRadius: 8,
         displayColors: true
@@ -156,8 +160,8 @@
         const ctxAtt = document.getElementById('attendanceChart').getContext('2d');
 
         const gradientLine = ctxAtt.createLinearGradient(0, 0, 0, 300);
-        gradientLine.addColorStop(0, 'rgba(13, 148, 136, 0.35)');
-        gradientLine.addColorStop(1, 'rgba(13, 148, 136, 0)');
+        gradientLine.addColorStop(0, 'rgba(59, 130, 246, 0.35)');
+        gradientLine.addColorStop(1, 'rgba(59, 130, 246, 0)');
 
         new Chart(ctxAtt, {
             type: 'line',

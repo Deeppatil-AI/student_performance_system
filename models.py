@@ -16,6 +16,7 @@ class User(Document, UserMixin):
     full_name = StringField(max_length=200)
     roll_no = StringField(max_length=50)
     prn = StringField(max_length=50)
+    email = StringField(max_length=200)
     photo = StringField(max_length=300)
     branch = ReferenceField(Branch)
     section = StringField(max_length=5)

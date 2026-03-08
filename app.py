@@ -3,7 +3,7 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from werkzeug.utils import secure_filename
 from flask_login import LoginManager, login_user, login_required, logout_user, current_user
 from models import User, Branch, TimetableSlot, LectureAttendance, Todo, CodingStat
-from mongoengine import connect, Q
+from mongoengine import connect, Q, DoesNotExist
 from datetime import datetime, date, timedelta
 import os
 import calendar
@@ -12,11 +12,23 @@ from dotenv import load_dotenv
 # Load environment variables
 load_dotenv()
 
+MONGO_URI = os.getenv('MONGO_URI')
+SECRET_KEY = os.getenv('SECRET_KEY')
+
+if not MONGO_URI:
+    print("WARNING: MONGO_URI not set. Application might fail to connect to database.")
+if not SECRET_KEY:
+    print("WARNING: SECRET_KEY not set. Using insecure default.")
+
 app = Flask(__name__)
-app.config['SECRET_KEY'] = os.getenv('SECRET_KEY', 'dev_secret_key_123')
+app.config['SECRET_KEY'] = SECRET_KEY or 'dev_secret_key_123'
 
 # MongoDB Connection
-connect(host=os.getenv('MONGO_URI'))
+if MONGO_URI:
+    connect(host=MONGO_URI)
+else:
+    # Fallback to local if URI is missing (for local dev without .env)
+    connect('student_performance_db')
 
 # Photo upload config
 UPLOAD_FOLDER = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'static', 'uploads')
@@ -80,6 +92,7 @@ def signup():
         prn = request.form.get('prn', '').strip()
         branch_id = request.form.get('branch_id')
         section = request.form.get('section')
+        email = request.form.get('email', '').strip()
 
         if User.objects(username=username).first():
             flash('Username already exists.', category='error')
@@ -97,7 +110,7 @@ def signup():
             new_user = User(
                 username=username,
                 password=generate_password_hash(password, method='pbkdf2:sha256'),
-                full_name=full_name, roll_no=roll_no, prn=prn,
+                full_name=full_name, roll_no=roll_no, prn=prn, email=email,
                 photo=photo_filename, branch=branch_obj, section=section
             )
             new_user.save()
@@ -113,13 +126,19 @@ def logout():
     return redirect(url_for('login'))
 
 def get_user_slots_for_day(user, day_name):
-    if not user.branch: return []
+    try:
+        if not user.branch: return []
+    except DoesNotExist:
+        return []
     return TimetableSlot.objects(branch=user.branch, day=day_name).filter(
         Q(section=None) | Q(section=user.section)
     ).order_by('slot_number')
 
 def get_attendance_summary(user):
-    if not user.branch: return []
+    try:
+        if not user.branch: return []
+    except DoesNotExist:
+        return []
     all_slots = TimetableSlot.objects(branch=user.branch).filter(
         Q(section=None) | Q(section=user.section)
     )
@@ -253,5 +272,46 @@ def cgpa(): return render_template('cgpa.html', user=current_user)
 @login_required
 def timer(): return render_template('timer.html', user=current_user)
 
+@app.route('/profile/edit', methods=['GET', 'POST'])
+@login_required
+def edit_profile():
+    branches = Branch.objects().all()
+    if request.method == 'POST':
+        current_user.full_name = request.form.get('full_name', '').strip()
+        current_user.email = request.form.get('email', '').strip()
+        current_user.roll_no = request.form.get('roll_no', '').strip()
+        current_user.prn = request.form.get('prn', '').strip()
+        current_user.section = request.form.get('section')
+        
+        branch_id = request.form.get('branch_id')
+        if branch_id:
+            current_user.branch = Branch.objects(id=branch_id).first()
+            
+        remove_photo = request.form.get('remove_photo') == 'true'
+        if remove_photo and current_user.photo:
+            photo_path = os.path.join(app.config['UPLOAD_FOLDER'], current_user.photo)
+            if os.path.exists(photo_path):
+                try:
+                    os.remove(photo_path)
+                except Exception as e:
+                    print(f"Error deleting photo: {e}")
+            current_user.photo = None
+
+        photo = request.files.get('photo')
+        if photo and photo.filename and allowed_file(photo.filename):
+            # If new photo is uploaded, it overrides the 'remove_photo' flag
+            filename = secure_filename(f"{current_user.username}_{photo.filename}")
+            photo.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+            current_user.photo = filename
+            
+        current_user.save()
+        flash('Profile updated successfully!', category='success')
+        return redirect(url_for('dashboard'))
+        
+    return render_template('edit_profile.html', user=current_user, branches=branches)
+
 if __name__ == '__main__':
-    app.run(debug=True, port=5000)
+    # Use environment variables for port and host, with defaults for local development
+    port = int(os.environ.get("PORT", 5000))
+    debug = os.environ.get("FLASK_DEBUG", "True").lower() == "true"
+    app.run(host='0.0.0.0', port=port, debug=debug)
