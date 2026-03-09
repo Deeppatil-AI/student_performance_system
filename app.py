@@ -206,12 +206,27 @@ def attendance():
         if selected_date > today:
             flash('Future date attendance not allowed.', category='error')
             return redirect(url_for('attendance', date=today.isoformat()))
+        
+        current_time = datetime.now().strftime('%H:%M')
+        updated_count = 0
+        
         for slot in slots:
             status = request.form.get(f'slot_{slot.id}')
-            if status in ('present', 'absent'):
+            # Restriction: Only allow if it's a past date OR if it's today and the lecture has ended
+            is_markable = (selected_date < today) or (selected_date == today and current_time >= slot.end_time)
+            
+            if is_markable:
                 dt = datetime.combine(selected_date, datetime.min.time())
-                LectureAttendance.objects(student=current_user, date=dt, timetable_slot=slot).update_one(set__status=status, upsert=True)
-        flash('Attendance saved!', category='success')
+                if status in ('present', 'absent'):
+                    LectureAttendance.objects(student=current_user, date=dt, timetable_slot=slot).update_one(set__status=status, upsert=True)
+                    updated_count += 1
+                elif status == '':
+                    # If empty status is sent, remove the attendance record (unticking)
+                    LectureAttendance.objects(student=current_user, date=dt, timetable_slot=slot).delete()
+                    updated_count += 1
+
+        if updated_count > 0:
+            flash('Attendance saved!', category='success')
         return redirect(url_for('attendance', date=selected_date.isoformat()))
 
     existing_records = {}

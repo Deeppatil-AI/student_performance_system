@@ -75,60 +75,66 @@
 
         <div class="lecture-cards">
             {% for slot in slots %}
-            {% set status = existing_records.get(slot.id, '') %}
-            {% set is_current = is_today and current_time >= slot.start_time and current_time < slot.end_time %} <div
-                class="lecture-card glass-panel {{ 'lecture-active' if is_current else '' }} {{ 'lecture-present' if status == 'present' else '' }} {{ 'lecture-absent' if status == 'absent' else '' }}"
-                id="lecture-{{ slot.id }}">
+            {% set status = existing_records.get(slot.id|string, '') %}
+            {% set is_current = is_today and current_time >= slot.start_time and current_time < slot.end_time %} {% set
+                is_markable=(not is_future and not is_today) or (is_today and current_time>= slot.end_time) %}
 
-                {% if is_current %}
-                <div class="live-indicator">
-                    <span class="live-dot"></span> LIVE NOW
+                <div class="lecture-card glass-panel {{ 'lecture-active' if is_current else '' }} {{ 'lecture-present' if status == 'present' else '' }} {{ 'lecture-absent' if status == 'absent' else '' }} {{ 'lecture-locked' if not is_markable else '' }}"
+                    id="lecture-{{ slot.id }}">
+
+                    {% if is_current %}
+                    <div class="live-indicator">
+                        <span class="live-dot"></span> ONGOING: SAVES AT {{ slot.end_time }}
+                    </div>
+                    {% endif %}
+
+                    <div class="lecture-card-body">
+                        <div class="lecture-time">
+                            <i class="fa-regular fa-clock"></i>
+                            <span>{{ slot.start_time }} – {{ slot.end_time }}</span>
+                            <span class="slot-badge">Slot {{ slot.slot_number }}</span>
+                        </div>
+
+                        <div class="lecture-details">
+                            <h4 class="lecture-subject">
+                                {{ slot.subject_name }}
+                                <span class="type-badge {{ 'type-pr' if slot.subject_type == 'PR' else 'type-th' }}">
+                                    {{ slot.subject_type }}
+                                </span>
+                            </h4>
+                            <p class="lecture-prof">
+                                <i class="fa-solid fa-user-tie"></i> {{ slot.professor or 'TBA' }}
+                                {% if slot.section %}
+                                <span class="section-tag">{{ slot.section }}</span>
+                                {% endif %}
+                            </p>
+                        </div>
+
+                        <div class="attendance-toggle {{ 'disabled-toggles' if not is_markable else '' }}">
+                            <input type="hidden" name="slot_{{ slot.id }}" value="{{ status }}"
+                                id="input-{{ slot.id }}">
+                            <button type="button"
+                                class="toggle-btn toggle-present {{ 'active' if status == 'present' else '' }}" {% if
+                                not is_markable %}disabled{% else %}onclick="setStatus('{{ slot.id }}', 'present')" {%
+                                endif %}
+                                title="{{ 'Available after ' ~ slot.end_time if not is_markable else 'Present' }}">
+                                <i class="fa-solid fa-check"></i>
+                            </button>
+                            <button type="button"
+                                class="toggle-btn toggle-absent {{ 'active' if status == 'absent' else '' }}" {% if not
+                                is_markable %}disabled{% else %}onclick="setStatus('{{ slot.id }}', 'absent')" {% endif
+                                %} title="{{ 'Available after ' ~ slot.end_time if not is_markable else 'Absent' }}">
+                                <i class="fa-solid fa-xmark"></i>
+                            </button>
+                        </div>
+                    </div>
                 </div>
-                {% endif %}
-
-                <div class="lecture-card-body">
-                    <div class="lecture-time">
-                        <i class="fa-regular fa-clock"></i>
-                        <span>{{ slot.start_time }} – {{ slot.end_time }}</span>
-                        <span class="slot-badge">Slot {{ slot.slot_number }}</span>
-                    </div>
-
-                    <div class="lecture-details">
-                        <h4 class="lecture-subject">
-                            {{ slot.subject_name }}
-                            <span class="type-badge {{ 'type-pr' if slot.subject_type == 'PR' else 'type-th' }}">
-                                {{ slot.subject_type }}
-                            </span>
-                        </h4>
-                        <p class="lecture-prof">
-                            <i class="fa-solid fa-user-tie"></i> {{ slot.professor or 'TBA' }}
-                            {% if slot.section %}
-                            <span class="section-tag">{{ slot.section }}</span>
-                            {% endif %}
-                        </p>
-                    </div>
-
-                    <div class="attendance-toggle">
-                        <input type="hidden" name="slot_{{ slot.id }}" value="{{ status }}" id="input-{{ slot.id }}">
-                        <button type="button"
-                            class="toggle-btn toggle-present {{ 'active' if status == 'present' else '' }}"
-                            onclick="setStatus({{ slot.id }}, 'present')" title="Present">
-                            <i class="fa-solid fa-check"></i>
-                        </button>
-                        <button type="button"
-                            class="toggle-btn toggle-absent {{ 'active' if status == 'absent' else '' }}"
-                            onclick="setStatus({{ slot.id }}, 'absent')" title="Absent">
-                            <i class="fa-solid fa-xmark"></i>
-                        </button>
-                    </div>
-                </div>
+                {% endfor %}
         </div>
-        {% endfor %}
-    </div>
 
-    <button type="submit" class="btn-primary save-attendance-btn">
-        <i class="fa-solid fa-floppy-disk"></i> Save Attendance
-    </button>
+        <button type="submit" class="btn-primary save-attendance-btn">
+            <i class="fa-solid fa-floppy-disk"></i> Save Attendance
+        </button>
     </div>
 </form>
 {% endif %}
