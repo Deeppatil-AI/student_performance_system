@@ -2,7 +2,7 @@ from flask import Flask, render_template, redirect, url_for, request, flash, jso
 from werkzeug.security import generate_password_hash, check_password_hash
 from werkzeug.utils import secure_filename
 from flask_login import LoginManager, login_user, login_required, logout_user, current_user
-from models import User, Branch, TimetableSlot, LectureAttendance, Todo, CodingStat
+from backend.models import User, Branch, TimetableSlot, LectureAttendance, Todo, CodingStat
 from mongoengine import connect, Q, DoesNotExist
 from datetime import datetime, date, timedelta
 import os

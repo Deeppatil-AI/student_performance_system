@@ -2,7 +2,7 @@ import os
 from datetime import datetime, date, timedelta
 import random
 from mongoengine import connect
-from models import User, Branch, TimetableSlot, LectureAttendance, Todo, CodingStat
+from backend.models import User, Branch, TimetableSlot, LectureAttendance, Todo, CodingStat
 from dotenv import load_dotenv
 
 load_dotenv()

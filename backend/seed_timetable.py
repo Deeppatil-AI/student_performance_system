@@ -8,8 +8,8 @@ from dotenv import load_dotenv
 # Load env before importing app
 load_dotenv()
 
-from app import app
-from models import Branch, TimetableSlot
+from backend.app import app
+from backend.models import Branch, TimetableSlot
 
 # Teaching Staff mapping
 PROFESSORS = {

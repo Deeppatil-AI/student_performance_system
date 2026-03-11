@@ -1,6 +1,6 @@
 import os
 from mongoengine import connect
-from models import Branch, User
+from backend.models import Branch, User
 from dotenv import load_dotenv
 
 load_dotenv()
