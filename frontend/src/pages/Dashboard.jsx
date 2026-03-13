@@ -1,124 +1,191 @@
-import { Link } from 'react-router-dom';
-import {
-  Timer, CheckSquare, BookOpen, TrendingUp, Code2,
-  Clock, Target, Flame, BookMarked, ArrowRight, Star,
+import { 
+  BarChart3, 
+  Calendar, 
+  CheckCircle2, 
+  Bug, 
+  Code2, 
+  ChevronDown, 
+  TrendingUp, 
+  Users, 
+  GitPullRequest, 
+  Rocket, 
+  UserPlus,
+  ShieldCheck,
+  Zap
 } from 'lucide-react';
-import StatCard from '../components/StatCard';
-
-const summaryCards = [
-  { title: 'Study Hours Today', value: '3h 25m', subtitle: 'Goal: 5 hours',     icon: Clock,   gradient: 'gradient-primary' },
-  { title: 'Tasks Completed',   value: '7/12',  subtitle: '5 tasks remaining',  icon: CheckSquare, gradient: 'gradient-teal' },
-  { title: 'Avg Attendance',    value: '82%',   subtitle: 'Above 75% threshold', icon: BookOpen, gradient: 'gradient-amber' },
-  { title: 'Current CGPA',      value: '8.4',   subtitle: 'Target: 9.0',         icon: TrendingUp, gradient: 'gradient-rose' },
-];
-
-const quickLinks = [
-  { to: '/timer',      icon: Timer,       label: 'Study Timer',     sub: 'Start a focus session', color: 'text-primary-600 bg-primary-50' },
-  { to: '/todo',       icon: CheckSquare, label: 'To-Do List',       sub: '5 tasks pending',       color: 'text-teal-600 bg-teal-50' },
-  { to: '/attendance', icon: BookOpen,    label: 'Attendance',       sub: '82% overall',           color: 'text-amber-600 bg-amber-50' },
-  { to: '/cgpa',       icon: TrendingUp,  label: 'CGPA Calculator',  sub: 'Plan your semester',    color: 'text-rose-600 bg-rose-50' },
-  { to: '/coding',     icon: Code2,       label: 'Coding Activity',  sub: '🔥 7 day streak',       color: 'text-violet-600 bg-violet-50' },
-];
-
-const recentActivity = [
-  { icon: Timer,  label: 'Completed 25-min focus session',   time: '2 hrs ago',  color: 'text-primary-500 bg-primary-50' },
-  { icon: CheckSquare, label: 'Marked "OS Assignment" done', time: '4 hrs ago',  color: 'text-teal-500 bg-teal-50' },
-  { icon: Code2,  label: 'Solved 3 problems on LeetCode',    time: 'Yesterday',  color: 'text-violet-500 bg-violet-50' },
-  { icon: BookOpen, label: 'Attendance marked for DBMS',     time: 'Yesterday',  color: 'text-amber-500 bg-amber-50' },
-  { icon: Star,   label: 'Updated CGPA target to 9.0',       time: '2 days ago', color: 'text-rose-500 bg-rose-50' },
-];
 
 export default function Dashboard() {
+  const stats = [
+    { label: 'Attendance', value: '94.2%', change: '+2.5%', icon: Calendar, color: 'text-blue-400', bg: 'bg-blue-600/10', trend: 'up' },
+    { label: 'Tasks Completed', value: '128', change: '-4.0%', icon: CheckCircle2, color: 'text-orange-400', bg: 'bg-orange-600/10', trend: 'down' },
+    { label: 'Open Problems', value: '42', change: '-10.2%', icon: Bug, color: 'text-violet-400', bg: 'bg-violet-600/10', trend: 'down' },
+    { label: 'Coding Hours', value: '320h', change: '+15%', icon: Code2, color: 'text-emerald-400', bg: 'bg-emerald-600/10', trend: 'up' },
+  ];
+
+  const activity = [
+    { id: 1, title: 'Merged PR #1240 into main', time: '2 hours ago', repo: 'student_performance_system', icon: GitPullRequest, color: 'text-orange-400', bg: 'bg-orange-400/10' },
+    { id: 2, title: 'Deployment successful', time: '5 hours ago', env: 'Staging', icon: Rocket, color: 'text-emerald-400', bg: 'bg-emerald-400/10' },
+    { id: 3, title: 'Added 3 new members to Frontend Team', time: 'Yesterday at 4:32 PM', icon: UserPlus, color: 'text-blue-400', bg: 'bg-blue-400/10' },
+  ];
+
   return (
-    <div className="space-y-8 animate-slide-up">
-      {/* Welcome banner */}
-      <div className="relative overflow-hidden rounded-2xl gradient-primary p-8 shadow-card-lg">
-        <div className="absolute -top-8 -right-8 w-40 h-40 rounded-full bg-white/10"></div>
-        <div className="absolute -bottom-10 -left-6 w-32 h-32 rounded-full bg-white/5"></div>
-        <div className="relative z-10">
-          <p className="text-primary-200 text-sm font-medium mb-1">Good Evening 👋</p>
-          <h1 className="text-3xl font-bold text-white mb-2">Welcome back, Student!</h1>
-          <p className="text-primary-200 text-sm max-w-md">
-            You've studied <strong className="text-white">3h 25m</strong> today. Keep it up — only 1h 35m to hit your daily goal!
-          </p>
-        </div>
-        <div className="relative z-10 mt-5 flex gap-3">
-          <Link to="/timer" className="inline-flex items-center gap-2 bg-white text-primary-700 font-semibold text-sm px-5 py-2.5 rounded-xl hover:bg-primary-50 transition-colors shadow-sm">
-            <Timer className="w-4 h-4" /> Start Studying
-          </Link>
-          <Link to="/todo" className="inline-flex items-center gap-2 bg-white/20 text-white font-semibold text-sm px-5 py-2.5 rounded-xl hover:bg-white/30 transition-colors">
-            View Tasks <ArrowRight className="w-4 h-4" />
-          </Link>
-        </div>
-      </div>
-
-      {/* Summary stat cards */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
-        {summaryCards.map((c) => (
-          <StatCard key={c.title} {...c} />
-        ))}
-      </div>
-
-      {/* Quick links + Activity */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        {/* Quick Links */}
-        <div className="lg:col-span-2">
-          <h2 className="text-base font-bold text-slate-700 mb-4">Quick Access</h2>
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            {quickLinks.map(({ to, icon: Icon, label, sub, color }) => (
-              <Link
-                key={to}
-                to={to}
-                className="card flex items-center gap-4 hover:shadow-card-lg group transition-all cursor-pointer"
-              >
-                <div className={`w-11 h-11 rounded-xl flex items-center justify-center flex-shrink-0 ${color}`}>
-                  <Icon className="w-5 h-5" />
-                </div>
-                <div className="flex-1">
-                  <p className="font-semibold text-sm text-slate-800">{label}</p>
-                  <p className="text-xs text-slate-400 mt-0.5">{sub}</p>
-                </div>
-                <ArrowRight className="w-4 h-4 text-slate-300 group-hover:text-primary-500 group-hover:translate-x-1 transition-all" />
-              </Link>
-            ))}
-          </div>
-        </div>
-
-        {/* Recent Activity */}
-        <div>
-          <h2 className="text-base font-bold text-slate-700 mb-4">Recent Activity</h2>
-          <div className="card space-y-3 p-4">
-            {recentActivity.map((item, i) => (
-              <div key={i} className="flex items-start gap-3">
-                <div className={`w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0 ${item.color}`}>
-                  <item.icon className="w-4 h-4" />
-                </div>
-                <div className="flex-1 min-w-0">
-                  <p className="text-xs font-medium text-slate-700 leading-snug">{item.label}</p>
-                  <p className="text-xs text-slate-400 mt-0.5">{item.time}</p>
-                </div>
+    <div className="space-y-8 animate-slide-up pb-10">
+      {/* 4 Block Stats Row */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        {stats.map((s, i) => (
+          <div key={i} className="card p-5 border-white/5 hover:border-blue-500/20 group relative overflow-hidden transition-all duration-500">
+            <div className="flex items-start justify-between relative z-10">
+              <div className={`w-12 h-12 rounded-xl ${s.bg} flex items-center justify-center ${s.color} shadow-inner`}>
+                <s.icon className="w-6 h-6" />
               </div>
-            ))}
+              <div className={`px-2 py-1 rounded-lg text-[10px] font-black tracking-widest ${s.trend === 'up' ? 'bg-emerald-500/10 text-emerald-400' : 'bg-red-500/10 text-red-400'} border border-white/5`}>
+                {s.trend === 'up' ? '▲' : '▼'} {s.change}
+              </div>
+            </div>
+            <div className="mt-6 relative z-10">
+              <p className="text-xs font-bold text-dim uppercase tracking-widest leading-none">{s.label}</p>
+              <h3 className="text-3xl font-black text-white mt-3 tracking-tighter">{s.value}</h3>
+            </div>
+            {/* Background decoration like the cards in the mockup */}
+            <div className="absolute -bottom-6 -right-6 w-20 h-20 rounded-full bg-white/[0.02] blur-xl" />
           </div>
+        ))}
+      </div>
+
+      {/* Charts Section */}
+      <div className="grid grid-cols-1 lg:grid-cols-5 gap-8">
+        {/* Attendance Overview - Large Line Chart */}
+        <div className="card lg:col-span-3 min-h-[400px] flex flex-col">
+          <div className="flex items-center justify-between mb-10">
+            <h3 className="text-lg font-black text-white tracking-tight">Attendance Overview</h3>
+            <button className="flex items-center gap-2 px-4 py-2 bg-dark-800 border border-dark-700 rounded-xl text-xs font-bold text-dim hover:text-white transition-all">
+              Last 7 Days
+              <ChevronDown className="w-3.5 h-3.5" />
+            </button>
+          </div>
+          
+          <div className="flex-1 relative flex items-end">
+            <svg className="w-full h-full" viewBox="0 0 800 300" preserveAspectRatio="none">
+              <defs>
+                <linearGradient id="chartGradient" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="0%" stopColor="#ff5722" stopOpacity="0.2" />
+                  <stop offset="100%" stopColor="#ff5722" stopOpacity="0" />
+                </linearGradient>
+              </defs>
+              <path 
+                d="M 0 250 Q 100 200 200 220 T 400 150 T 600 100 T 800 120" 
+                fill="none" stroke="#ff5722" strokeWidth="4" strokeLinecap="round" strokeLinejoin="round"
+                className="drop-shadow-[0_0_8px_rgba(255,87,34,0.3)]"
+              />
+              <path 
+                d="M 0 250 Q 100 200 200 220 T 400 150 T 600 100 T 800 120 V 300 H 0 Z" 
+                fill="url(#chartGradient)"
+              />
+            </svg>
+          </div>
+          <div className="flex justify-between mt-6 px-2">
+             {['MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT', 'SUN'].map(day => (
+               <span key={day} className="text-[10px] font-black text-dim tracking-widest">{day}</span>
+             ))}
+          </div>
+        </div>
+
+        {/* Platform Distribution - Donut Chart */}
+        <div className="card lg:col-span-2 min-h-[400px] flex flex-col">
+           <div className="flex items-center gap-3 mb-10">
+             <div className="w-1.5 h-5 bg-blue-600 rounded-full shadow-glow" />
+             <h3 className="text-lg font-black text-white tracking-tight">Platform Distribution</h3>
+           </div>
+           
+           <div className="flex-1 flex flex-col items-center justify-center gap-12">
+              <div className="relative w-48 h-48">
+                 <svg className="w-full h-full transform -rotate-90">
+                    <circle cx="96" cy="96" r="80" stroke="#1e2d4a" strokeWidth="16" fill="transparent" />
+                    <circle cx="96" cy="96" r="80" stroke="#2563eb" strokeWidth="16" fill="transparent" 
+                      strokeDasharray="502.4" strokeDashoffset="200" strokeLinecap="round" />
+                    <circle cx="96" cy="96" r="80" stroke="#60a5fa" strokeWidth="16" fill="transparent" 
+                      strokeDasharray="502.4" strokeDashoffset="400" strokeLinecap="round" />
+                 </svg>
+                 <div className="absolute inset-0 flex flex-col items-center justify-center">
+                    <p className="text-3xl font-black text-white leading-none">148</p>
+                    <p className="text-[10px] uppercase font-bold text-dim tracking-tight mt-1">Problems</p>
+                 </div>
+              </div>
+
+              <div className="grid grid-cols-1 gap-3 w-full max-w-[140px]">
+                 {[
+                   { label: 'LeetCode', color: 'bg-blue-600' },
+                   { label: 'HackerRank', color: 'bg-blue-500' },
+                   { label: 'CodeChef', color: 'bg-blue-300' },
+                 ].map(p => (
+                   <div key={p.label} className="flex items-center justify-between group cursor-pointer">
+                      <div className="flex items-center gap-3">
+                         <div className={`w-3 h-3 rounded-full ${p.color}`} />
+                         <span className="text-xs font-bold text-dim group-hover:text-white transition-colors">{p.label}</span>
+                      </div>
+                   </div>
+                 ))}
+              </div>
+           </div>
         </div>
       </div>
 
-      {/* Stats footer */}
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-        {[
-          { icon: Flame,     label: 'Current Streak',  value: '7 days',  color: 'text-orange-500' },
-          { icon: BookMarked,label: 'Subjects',         value: '6',       color: 'text-primary-500' },
-          { icon: Target,    label: 'CGPA Target',      value: '9.0',     color: 'text-rose-500' },
-          { icon: Code2,     label: 'Problems Solved',  value: '148',     color: 'text-violet-500' },
-        ].map(({ icon: Icon, label, value, color }) => (
-          <div key={label} className="card flex items-center gap-3 p-4">
-            <Icon className={`w-6 h-6 flex-shrink-0 ${color}`} />
-            <div>
-              <p className="text-xs text-slate-400">{label}</p>
-              <p className="font-bold text-slate-800">{value}</p>
-            </div>
-          </div>
-        ))}
+      {/* Bottom Section: Activity & Tips */}
+      <div className="grid grid-cols-1 lg:grid-cols-5 gap-8">
+        {/* Recent Activity */}
+        <div className="card lg:col-span-3 flex flex-col min-h-[350px]">
+           <div className="flex items-center justify-between mb-8">
+              <h3 className="text-lg font-black text-white tracking-tight">Recent Activity</h3>
+              <button className="text-[10px] font-black uppercase tracking-widest text-blue-400 hover:text-blue-300 transition-colors">View All</button>
+           </div>
+           
+           <div className="space-y-6">
+              {activity.map((item) => (
+                <div key={item.id} className="flex items-start gap-4 group cursor-pointer">
+                   <div className={`w-12 h-12 rounded-2xl ${item.bg} ${item.color} flex items-center justify-center flex-shrink-0 group-hover:scale-110 transition-transform`}>
+                      <item.icon className="w-5 h-5" />
+                   </div>
+                   <div className="flex-1 pt-1">
+                      <h4 className="text-sm font-bold text-white group-hover:text-blue-400 transition-colors">
+                        {item.title}
+                        {item.repo && <span className="text-blue-400 ml-1">#main</span>}
+                      </h4>
+                      <p className="text-xs text-dim mt-1">
+                        {item.time} {item.repo && `• Repository: ${item.repo}`} {item.env && `• Environment: ${item.env}`}
+                      </p>
+                   </div>
+                </div>
+              ))}
+           </div>
+        </div>
+
+        {/* Quick Tips */}
+        <div className="lg:col-span-2 space-y-6">
+           <div className="flex items-center gap-3 mb-2 ml-1">
+              <Zap className="w-5 h-5 text-amber-500" />
+              <h3 className="text-lg font-black text-white tracking-tight">Quick Tips</h3>
+           </div>
+           
+           <div className="card bg-blue-500/5 border-blue-500/10 p-5 space-y-4 hover:border-blue-500/20 transition-all">
+              <div className="flex items-center gap-3">
+                 <div className="w-2 h-2 rounded-full bg-orange-500" />
+                 <span className="text-[10px] font-black uppercase tracking-[0.2em] text-dim">Performance</span>
+              </div>
+              <p className="text-sm text-dim leading-relaxed font-medium">
+                Consider using lazy loading for your dashboard components to decrease initial load time by <span className="text-white font-black">30%</span>.
+              </p>
+           </div>
+
+           <div className="card bg-amber-500/5 border-amber-500/10 p-5 space-y-4 hover:border-amber-500/20 transition-all">
+              <div className="flex items-center gap-3">
+                 <div className="w-2 h-2 rounded-full bg-orange-500" />
+                 <span className="text-[10px] font-black uppercase tracking-[0.2em] text-dim">Security</span>
+              </div>
+              <p className="text-sm text-dim leading-relaxed font-medium">
+                Enable 2FA for all team leads to ensure repository access remains secure.
+              </p>
+           </div>
+        </div>
       </div>
     </div>
   );

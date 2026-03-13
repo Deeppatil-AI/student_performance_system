@@ -1,108 +1,137 @@
 import { useState } from 'react';
-import AttendanceCard from '../components/AttendanceCard';
-import { Plus, BookOpen, AlertTriangle } from 'lucide-react';
-
-const initialSubjects = [
-  { id: 1, subject: 'Operating Systems',      total: 48, attended: 42 },
-  { id: 2, subject: 'Database Management',    total: 44, attended: 38 },
-  { id: 3, subject: 'Computer Networks',      total: 50, attended: 30 },
-  { id: 4, subject: 'Software Engineering',   total: 40, attended: 38 },
-  { id: 5, subject: 'Data Structures & Algo', total: 52, attended: 40 },
-  { id: 6, subject: 'Machine Learning',       total: 36, attended: 28 },
-];
-
-let nextId = 7;
+import { 
+  BookOpen, 
+  Calendar as CalendarIcon, 
+  Check, 
+  X, 
+  Clock, 
+  User, 
+  Zap,
+  ChevronDown
+} from 'lucide-react';
 
 export default function AttendanceTracker() {
-  const [subjects, setSubjects] = useState(initialSubjects);
-  const [form, setForm]         = useState({ subject: '', total: '', attended: '' });
-  const [adding, setAdding]     = useState(false);
+  const lectures = [
+    { id: 1, time: '09:20 - 10:10', slot: 'Slot 1', subject: 'PSI', type: 'TH', prof: 'Prof. A.B.Patil', status: null },
+    { id: 2, time: '10:10 - 11:00', slot: 'Slot 2', subject: 'AI', type: 'TH', prof: 'Prof. Tushant Tayade', status: 'present' },
+    { id: 3, time: '11:50 - 12:40', slot: 'Slot 3', subject: 'PL-II', type: 'PR', prof: 'Prof. S.L.Tambe', lab: 'S1', status: 'absent' },
+    { id: 4, time: '12:40 - 13:30', slot: 'Slot 4', subject: 'PL-II', type: 'PR', prof: 'Prof. S.L.Tambe', lab: 'S1', status: null },
+    { id: 5, time: '13:45 - 14:35', slot: 'Slot 5', subject: 'OE', type: 'TH', prof: 'Prof. N.A. Patil', status: null },
+    { id: 6, time: '14:35 - 15:25', slot: 'Slot 6', subject: 'OE', type: 'TH', prof: 'Prof. N.A. Patil', status: null },
+  ];
 
-  const totalAll    = subjects.reduce((a, s) => a + s.total,    0);
-  const attendedAll = subjects.reduce((a, s) => a + s.attended, 0);
-  const overallPct  = totalAll ? Math.round((attendedAll / totalAll) * 100) : 0;
-  const atRisk      = subjects.filter((s) => s.total > 0 && Math.round((s.attended / s.total) * 100) < 75);
+  const [lectureList, setLectureList] = useState(lectures);
 
-  const addSubject = () => {
-    const { subject, total, attended } = form;
-    if (!subject.trim() || !total || !attended) return;
-    setSubjects((s) => [...s, { id: nextId++, subject, total: +total, attended: +attended }]);
-    setForm({ subject: '', total: '', attended: '' });
-    setAdding(false);
+  const setStatus = (id, status) => {
+    setLectureList(lectureList.map(l => l.id === id ? { ...l, status } : l));
   };
 
-  const markClass = (id, present) => {
-    setSubjects((prev) =>
-      prev.map((s) =>
-        s.id === id ? { ...s, total: s.total + 1, attended: s.attended + (present ? 1 : 0) } : s
-      )
-    );
-  };
+  const formattedDate = new Date().toLocaleDateString('en-US', {
+    weekday: 'long',
+    day: 'numeric',
+    month: 'short',
+    year: 'numeric'
+  });
 
   return (
-    <div className="space-y-6 animate-slide-up">
-      {/* Overall summary */}
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-5">
-        <div className="card text-center">
-          <p className="text-3xl font-bold text-primary-600">{overallPct}%</p>
-          <p className="text-sm text-slate-500 mt-1">Overall Attendance</p>
-          <div className="progress-bar mt-3">
-            <div className="progress-fill gradient-primary" style={{ width: `${overallPct}%` }} />
-          </div>
+    <div className="space-y-8 animate-slide-up pb-10">
+      {/* Header Section */}
+      <div className="flex items-center gap-4">
+        <div className="w-12 h-12 rounded-xl bg-blue-600 flex items-center justify-center shadow-blue-sm">
+          <BookOpen className="w-7 h-7 text-white" />
         </div>
-        <div className="card text-center">
-          <p className="text-3xl font-bold text-teal-600">{attendedAll}</p>
-          <p className="text-sm text-slate-500 mt-1">Classes Attended</p>
-          <p className="text-xs text-slate-400 mt-1">out of {totalAll} total</p>
-        </div>
-        <div className="card text-center">
-          <p className={`text-3xl font-bold ${atRisk.length > 0 ? 'text-red-500' : 'text-green-600'}`}>{atRisk.length}</p>
-          <p className="text-sm text-slate-500 mt-1">Subjects at Risk</p>
-          {atRisk.length > 0 && (
-            <div className="flex items-center justify-center gap-1 mt-1 text-red-500 text-xs">
-              <AlertTriangle className="w-3 h-3" /> Below 75%
-            </div>
-          )}
+        <div>
+          <h1 className="text-3xl font-black text-white tracking-tight leading-none">Attendance Tracker</h1>
+          <p className="text-dim mt-1 font-medium italic">Mark your lecture-wise attendance and stay above the 75% threshold.</p>
         </div>
       </div>
 
-      {/* Header row */}
-      <div className="flex items-center justify-between">
-        <h2 className="text-base font-bold text-slate-700 flex items-center gap-2">
-          <BookOpen className="w-5 h-5 text-primary-500" /> Subject Breakdown
-        </h2>
-        <button onClick={() => setAdding((a) => !a)} className="btn-primary flex items-center gap-2 text-sm">
-          <Plus className="w-4 h-4" /> Add Subject
-        </button>
-      </div>
-
-      {/* Add form */}
-      {adding && (
-        <div className="card space-y-3 border-2 border-primary-200 animate-fade-in">
-          <h3 className="font-semibold text-slate-700 text-sm">New Subject</h3>
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-            <input placeholder="Subject name"    value={form.subject}  onChange={(e) => setForm({ ...form, subject:  e.target.value })} className="input-field" />
-            <input placeholder="Total classes"   value={form.total}    onChange={(e) => setForm({ ...form, total:    e.target.value })} type="number" className="input-field" />
-            <input placeholder="Attended"        value={form.attended} onChange={(e) => setForm({ ...form, attended: e.target.value })} type="number" className="input-field" />
-          </div>
-          <div className="flex gap-2">
-            <button onClick={addSubject} className="btn-primary text-sm">Add Subject</button>
-            <button onClick={() => setAdding(false)} className="btn-secondary text-sm">Cancel</button>
+      {/* Date Control Card */}
+      <div className="card py-4 px-6 flex items-center justify-between">
+        <div className="flex items-center gap-4">
+          <CalendarIcon className="w-5 h-5 text-blue-400" />
+          <h3 className="font-bold text-white text-lg">{formattedDate}</h3>
+          <div className="bg-dark-900 border border-dark-600 rounded-lg p-1 px-2 flex items-center gap-2 cursor-pointer hover:border-blue-500 transition-colors">
+             <span className="text-xs text-dim">12/03/2026</span>
+             <CalendarIcon className="w-3.5 h-3.5 text-dim" />
           </div>
         </div>
-      )}
+        
+        <div className="flex items-center gap-3">
+           <div className="bg-blue-600/10 border border-blue-600/30 px-3 py-1.5 rounded-full flex items-center gap-2 animate-pulse shadow-glow">
+              <Zap className="w-3.5 h-3.5 text-blue-400 fill-blue-400" />
+              <span className="text-[10px] font-black tracking-widest text-blue-400 uppercase">Live: 00:35</span>
+           </div>
+        </div>
+      </div>
 
-      {/* Subject cards */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-        {subjects.map((s) => (
-          <div key={s.id} className="space-y-2">
-            <AttendanceCard subject={s.subject} total={s.total} attended={s.attended} />
-            <div className="flex gap-2">
-              <button onClick={() => markClass(s.id, true)}  className="flex-1 text-xs py-1.5 rounded-lg bg-green-50 text-green-700 font-semibold hover:bg-green-100 transition-colors">+ Present</button>
-              <button onClick={() => markClass(s.id, false)} className="flex-1 text-xs py-1.5 rounded-lg bg-red-50 text-red-600 font-semibold hover:bg-red-100 transition-colors">+ Absent</button>
+      {/* Lectures List */}
+      <div className="space-y-4">
+        <h3 className="text-lg font-black text-white flex items-center gap-3 lowercase ml-2">
+           <Clock className="w-5 h-5 text-blue-400" />
+           Thursday's Lectures
+        </h3>
+
+        <div className="space-y-3">
+          {lectureList.map((lec) => (
+            <div 
+              key={lec.id} 
+              className={`card group hover:shadow-blue-sm transition-all border-l-4 p-4 md:p-6 ${
+                lec.status === 'present' ? 'border-l-green-500' : 
+                lec.status === 'absent' ? 'border-l-red-500' : 
+                'border-l-transparent'
+              }`}
+            >
+              <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
+                <div className="flex items-center gap-6">
+                  <div className="flex flex-col items-center">
+                    <span className="text-xs font-bold text-white whitespace-nowrap">{lec.time}</span>
+                    <span className="text-[9px] uppercase font-black tracking-widest text-dim mt-1 p-1 bg-dark-900 rounded border border-dark-600">
+                      {lec.slot}
+                    </span>
+                  </div>
+
+                  <div className="h-10 w-px bg-dark-700 hidden md:block" />
+
+                  <div className="flex items-center gap-4 text-left">
+                    <div className="min-w-[80px]">
+                      <h4 className="text-xl font-black text-white tracking-tight flex items-center gap-2 leading-none">
+                        {lec.subject}
+                        <span className="text-[10px] bg-dark-900 border border-dark-600 px-1.5 py-0.5 rounded text-dim">
+                          {lec.type}
+                        </span>
+                      </h4>
+                      <div className="flex items-center gap-2 mt-1.5">
+                        <User className="w-3.5 h-3.5 text-dim" />
+                        <span className="text-xs font-semibold text-dim">{lec.prof}</span>
+                        {lec.lab && (
+                          <span className="text-[10px] bg-dark-900 border border-dark-600 px-1.5 py-0.5 rounded text-blue-400 font-bold">
+                            {lec.lab}
+                          </span>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="flex items-center gap-2 self-end md:self-center">
+                  <button 
+                    onClick={() => setStatus(lec.id, 'present')}
+                    className={`nav-link group py-2 md:py-3 cursor-pointer ${lec.status === 'present' ? 'bg-green-500/20 text-green-400 border border-green-500/30' : 'bg-dark-900 border border-dark-600 grayscale opacity-40 hover:grayscale-0 hover:opacity-100 hover:border-green-500'}`}
+                  >
+                    <Check className={`w-5 h-5 ${lec.status === 'present' ? 'scale-125' : ''} transition-transform`} />
+                  </button>
+                  <button 
+                    onClick={() => setStatus(lec.id, 'absent')}
+                    className={`nav-link group py-2 md:py-3 cursor-pointer ${lec.status === 'absent' ? 'bg-red-500/20 text-red-400 border border-red-500/30' : 'bg-dark-900 border border-dark-600 grayscale opacity-40 hover:grayscale-0 hover:opacity-100 hover:border-red-500'}`}
+                  >
+                    <X className={`w-5 h-5 ${lec.status === 'absent' ? 'scale-125' : ''} transition-transform`} />
+                  </button>
+                </div>
+              </div>
             </div>
-          </div>
-        ))}
+          ))}
+        </div>
       </div>
     </div>
   );

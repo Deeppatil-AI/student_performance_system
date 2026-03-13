@@ -1,135 +1,189 @@
 import { useState, useEffect, useRef } from 'react';
-import TimerCard from '../components/TimerCard';
-import { Coffee, Brain, SkipForward, Volume2 } from 'lucide-react';
-
-const SESSIONS = {
-  focus: { label: 'Focus',       duration: 25 * 60, desc: '25 minutes of deep work' },
-  short: { label: 'Short Break', duration:  5 * 60, desc: '5 minute breather' },
-  long:  { label: 'Long Break',  duration: 15 * 60, desc: '15 minute rest' },
-};
-
-const completedLog = [
-  { type: 'Focus',       duration: '25:00', time: '2:30 PM' },
-  { type: 'Short Break', duration: '5:00',  time: '2:55 PM' },
-  { type: 'Focus',       duration: '25:00', time: '3:00 PM' },
-];
+import { 
+  Play, 
+  Pause, 
+  RotateCcw, 
+  CheckCircle2, 
+  Clock, 
+  Zap, 
+  Flame,
+  Layout,
+  BookOpen,
+  Calculator,
+  ChevronRight,
+  TrendingUp,
+  Target
+} from 'lucide-react';
 
 export default function StudyTimer() {
-  const [mode, setMode]       = useState('focus');
-  const [timeLeft, setLeft]   = useState(SESSIONS.focus.duration);
+  const [minutes, setMinutes] = useState(25);
+  const [seconds, setSeconds] = useState(0);
   const [running, setRunning] = useState(false);
-  const [cycles, setCycles]   = useState(0);
-  const intervalRef           = useRef(null);
-
-  useEffect(() => {
-    setLeft(SESSIONS[mode].duration);
-    setRunning(false);
-    clearInterval(intervalRef.current);
-  }, [mode]);
+  const timerRef = useRef(null);
 
   useEffect(() => {
     if (running) {
-      intervalRef.current = setInterval(() => {
-        setLeft((t) => {
-          if (t <= 1) {
-            clearInterval(intervalRef.current);
-            setRunning(false);
-            if (mode === 'focus') setCycles((c) => c + 1);
-            return 0;
-          }
-          return t - 1;
-        });
+      timerRef.current = setInterval(() => {
+        if (seconds > 0) {
+          setSeconds(seconds - 1);
+        } else if (minutes > 0) {
+          setMinutes(minutes - 1);
+          setSeconds(59);
+        } else {
+          setRunning(false);
+          clearInterval(timerRef.current);
+        }
       }, 1000);
     } else {
-      clearInterval(intervalRef.current);
+      clearInterval(timerRef.current);
     }
-    return () => clearInterval(intervalRef.current);
-  }, [running, mode]);
+    return () => clearInterval(timerRef.current);
+  }, [running, minutes, seconds]);
 
-  const reset = () => {
+  const toggleTimer = () => setRunning(!running);
+  const resetTimer = () => {
     setRunning(false);
-    setLeft(SESSIONS[mode].duration);
+    setMinutes(25);
+    setSeconds(0);
   };
 
-  const skip = () => {
-    setMode((m) => m === 'focus' ? 'short' : 'focus');
-  };
+  const fmt = (n) => n.toString().padStart(2, '0');
+
+  const stats = [
+    { label: 'Completed Today', value: '8 Sessions', change: '+12%', icon: CheckCircle2, color: 'text-emerald-400', bg: 'bg-emerald-500/10' },
+    { label: 'Focus Time', value: '3.2 Hours', change: 'Target: 4h', icon: Clock, color: 'text-orange-400', bg: 'bg-orange-500/10' },
+    { label: 'Current Streak', value: '5 Days', icon: Zap, color: 'text-blue-400', bg: 'bg-blue-500/10' },
+  ];
+
+  const recentSessions = [
+    { id: 1, title: 'UI Design Implementation', time: 'Today, 2:15 PM', duration: '25:00', status: 'SUCCESS', icon: Layout, color: 'text-orange-400' },
+    { id: 2, title: 'History Research', time: 'Today, 1:30 PM', duration: '25:00', status: 'SUCCESS', icon: BookOpen, color: 'text-orange-400' },
+    { id: 3, title: 'Mathematics Exercises', time: 'Today, 11:00 AM', duration: '12:45', status: 'INTERRUPTED', icon: Calculator, color: 'text-orange-400' },
+  ];
 
   return (
-    <div className="space-y-8 max-w-2xl mx-auto animate-slide-up">
-      {/* Mode selector */}
-      <div className="card p-2 flex gap-2">
-        {Object.entries(SESSIONS).map(([key, { label }]) => (
-          <button
-            key={key}
-            onClick={() => setMode(key)}
-            className={`flex-1 py-2.5 rounded-xl text-sm font-semibold transition-all duration-200 ${
-              mode === key
-                ? 'gradient-primary text-white shadow-sm'
-                : 'text-slate-500 hover:bg-surface-100'
-            }`}
-          >
-            {label}
-          </button>
+    <div className="space-y-8 animate-slide-up pb-10">
+      {/* Header (Optional, since Navbar has it, but following mockup style) */}
+      <div className="space-y-1">
+        <h1 className="text-3xl font-black text-white tracking-tight leading-none uppercase">Study Timer</h1>
+      </div>
+
+      {/* Main Timer Card */}
+      <div className="card flex flex-col items-center py-12 px-6 relative overflow-hidden group">
+         <div className="flex items-center gap-2 bg-orange-500/10 px-4 py-1.5 rounded-full border border-orange-500/20 mb-8">
+            <Flame className="w-3.5 h-3.5 text-orange-500 fill-current" />
+            <span className="text-[10px] font-black uppercase tracking-widest text-orange-400">Deep Work Session</span>
+         </div>
+
+         <div className="text-center mb-10">
+            <h2 className="text-3xl font-black text-white tracking-tight">Pomodoro Session</h2>
+            <p className="text-dim text-sm mt-1 font-medium italic">Focus on your task for 25 minutes</p>
+         </div>
+
+         {/* Timer Blocks */}
+         <div className="flex items-center gap-4 mb-12">
+            <div className="flex flex-col items-center gap-4">
+               <div className="w-32 h-44 rounded-3xl glass border-white/5 flex items-center justify-center relative overflow-hidden shadow-2xl">
+                  <span className="text-[90px] font-black text-white leading-none tracking-tighter transition-all duration-300">
+                    {fmt(minutes)}
+                  </span>
+                  <div className="absolute bottom-0 inset-x-0 h-1 bg-orange-500 shadow-glow shadow-orange-500/50" />
+               </div>
+               <span className="text-[10px] font-black text-dim tracking-[0.3em] uppercase">Minutes</span>
+            </div>
+
+            <div className="text-4xl font-black text-orange-400/50 mb-10">:</div>
+
+            <div className="flex flex-col items-center gap-4">
+               <div className="w-32 h-44 rounded-3xl glass border-white/5 flex items-center justify-center relative overflow-hidden shadow-2xl">
+                  <span className="text-[90px] font-black text-white leading-none tracking-tighter transition-all duration-300">
+                    {fmt(seconds)}
+                  </span>
+                  <div className="absolute bottom-0 inset-x-0 h-1 bg-orange-500 shadow-glow shadow-orange-500/50" />
+               </div>
+               <span className="text-[10px] font-black text-dim tracking-[0.3em] uppercase">Seconds</span>
+            </div>
+         </div>
+
+         {/* Controls */}
+         <div className="flex items-center gap-6">
+            <button 
+              onClick={toggleTimer}
+              className="btn-primary bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 px-10 py-5 flex items-center gap-3 border-none group transition-all transform active:scale-95"
+            >
+              {running ? <Pause className="w-5 h-5 fill-current" /> : <Play className="w-5 h-5 fill-current" />}
+              <span className="text-xs font-black uppercase tracking-widest">{running ? 'Pause Session' : 'Start Session'}</span>
+            </button>
+            
+            <button 
+              onClick={() => setRunning(false)}
+              className="px-8 py-5 rounded-xl bg-dark-700/50 text-dim hover:text-white border border-dark-600 flex items-center gap-3 transition-all hover:bg-dark-600"
+            >
+              <Pause className="w-4 h-4" />
+              <span className="text-xs font-black uppercase tracking-widest">Pause</span>
+            </button>
+
+            <button 
+              onClick={resetTimer}
+              className="p-5 rounded-full bg-dark-800 border border-dark-700 text-dim hover:text-white hover:border-orange-500/30 transition-all shadow-inner"
+            >
+              <RotateCcw className="w-5 h-5" />
+            </button>
+         </div>
+
+         <div className="absolute -top-24 -right-24 w-64 h-64 bg-orange-500/5 rounded-full blur-3xl pointer-events-none" />
+      </div>
+
+      {/* Stats Row */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        {stats.map((s, i) => (
+          <div key={i} className="card p-6 border-white/5 hover:border-blue-500/20 transition-all">
+            <div className="flex items-center justify-between mb-8">
+               <div className={`w-12 h-12 rounded-2xl ${s.bg} ${s.color} flex items-center justify-center shadow-inner`}>
+                  <s.icon className="w-6 h-6" />
+               </div>
+               {s.change && (
+                  <span className={`px-2.5 py-1 rounded-lg text-[10px] font-black uppercase tracking-widest ${s.color.includes('emerald') ? 'bg-emerald-500/10 border border-emerald-500/20' : 'bg-orange-500/10 border border-orange-500/20 text-orange-400'}`}>
+                    {s.change}
+                  </span>
+               )}
+            </div>
+            <div>
+               <p className="text-[10px] font-black text-dim uppercase tracking-widest mb-1">{s.label}</p>
+               <h3 className="text-2xl font-black text-white tracking-tight">{s.value}</h3>
+            </div>
+          </div>
         ))}
       </div>
 
-      {/* Timer */}
-      <TimerCard
-        timeLeft={timeLeft}
-        isRunning={running}
-        onStart={() => setRunning(true)}
-        onPause={() => setRunning(false)}
-        onReset={reset}
-        mode={mode}
-      />
-
-      {/* Tips & stats */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-        <div className="card flex items-center gap-4 p-4">
-          <div className="w-12 h-12 rounded-xl bg-violet-100 flex items-center justify-center">
-            <Brain className="w-6 h-6 text-violet-600" />
-          </div>
-          <div>
-            <p className="text-sm font-semibold text-slate-700">Sessions Today</p>
-            <p className="text-2xl font-bold text-primary-600">{cycles}</p>
-          </div>
-        </div>
-        <div className="card flex items-center gap-4 p-4">
-          <div className="w-12 h-12 rounded-xl bg-teal-100 flex items-center justify-center">
-            <Coffee className="w-6 h-6 text-teal-600" />
-          </div>
-          <div>
-            <p className="text-sm font-semibold text-slate-700">Study Time</p>
-            <p className="text-2xl font-bold text-teal-600">{Math.floor(cycles * 25 / 60)}h {(cycles * 25) % 60}m</p>
-          </div>
-        </div>
-      </div>
-
-      {/* Action row */}
-      <div className="flex items-center justify-between">
-        <button onClick={skip} className="btn-secondary flex items-center gap-2 text-sm">
-          <SkipForward className="w-4 h-4" /> Skip
-        </button>
-        <p className="text-sm text-slate-500 italic">{SESSIONS[mode].desc}</p>
-        <button className="btn-secondary flex items-center gap-2 text-sm">
-          <Volume2 className="w-4 h-4" /> Sound
-        </button>
-      </div>
-
-      {/* Session log */}
+      {/* Recent Sessions List */}
       <div className="card">
-        <h2 className="font-bold text-slate-700 text-sm mb-4">Session Log</h2>
-        <div className="space-y-2">
-          {completedLog.map((s, i) => (
-            <div key={i} className="flex items-center gap-3 p-3 rounded-xl bg-surface-50 text-sm">
-              <div className={`w-2 h-2 rounded-full flex-shrink-0 ${s.type === 'Focus' ? 'bg-primary-500' : 'bg-teal-400'}`} />
-              <span className="flex-1 text-slate-700 font-medium">{s.type}</span>
-              <span className="text-slate-400">{s.duration}</span>
-              <span className="text-slate-400">{s.time}</span>
-            </div>
-          ))}
-        </div>
+         <div className="flex items-center justify-between mb-10">
+            <h3 className="text-xl font-black text-white tracking-tight">Recent Sessions</h3>
+            <button className="text-[10px] font-black uppercase tracking-widest text-orange-400 hover:text-orange-300 transition-colors">View All</button>
+         </div>
+
+         <div className="space-y-4">
+            {recentSessions.map((session, i) => (
+               <div key={i} className={`flex items-center justify-between p-4 rounded-2xl transition-all border border-transparent hover:bg-white/[0.02] hover:border-white/5 group ${i !== recentSessions.length - 1 ? 'border-b border-white/5' : ''}`}>
+                  <div className="flex items-center gap-4">
+                     <div className="w-12 h-12 rounded-2xl bg-dark-900 border border-dark-700 flex items-center justify-center text-orange-400 group-hover:scale-110 transition-transform">
+                        <session.icon className="w-5 h-5" />
+                     </div>
+                     <div>
+                        <h4 className="text-sm font-bold text-white mb-0.5">{session.title}</h4>
+                        <p className="text-[10px] font-medium text-dim">{session.time}</p>
+                     </div>
+                  </div>
+                  <div className="text-right">
+                     <p className="text-sm font-black text-white mb-1.5 tracking-tight">{session.duration}</p>
+                     <span className={`text-[9px] font-black uppercase tracking-[0.2em] px-2 py-0.5 rounded-md ${session.status === 'SUCCESS' ? 'text-emerald-500' : 'text-rose-500'}`}>
+                        {session.status}
+                     </span>
+                  </div>
+               </div>
+            ))}
+         </div>
       </div>
     </div>
   );

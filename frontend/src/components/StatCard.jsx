@@ -1,25 +1,23 @@
-export default function StatCard({ title, value, subtitle, icon: Icon, gradient = 'gradient-primary', textColor = 'text-white' }) {
+export default function StatCard({ title, value, subtitle, icon: Icon, colorClass = 'text-blue-400', bgClass = 'bg-blue-500/10' }) {
   return (
-    <div className={`relative overflow-hidden rounded-2xl p-6 shadow-card ${gradient} text-white animate-fade-in`}>
-      {/* Background decoration */}
-      <div className="absolute -top-4 -right-4 w-24 h-24 rounded-full bg-white/10"></div>
-      <div className="absolute -bottom-6 -left-4 w-20 h-20 rounded-full bg-white/5"></div>
-
-      <div className="relative z-10">
-        <div className="flex items-start justify-between mb-4">
-          <div>
-            <p className="text-sm font-medium text-white/80">{title}</p>
-            <p className="text-3xl font-bold mt-1">{value}</p>
+    <div className="card hover:shadow-blue-md group border-blue-500/5 hover:border-blue-500/20">
+      <div className="flex items-start gap-5">
+        <div className={`w-14 h-14 rounded-2xl ${bgClass} flex items-center justify-center flex-shrink-0 group-hover:scale-110 transition-transform shadow-inner`}>
+          {Icon && <Icon className={`w-7 h-7 ${colorClass}`} />}
+        </div>
+        
+        <div className="flex-1 min-w-0">
+          <p className="text-sm font-semibold text-dim truncate uppercase tracking-wider">{title}</p>
+          <div className="flex items-baseline gap-2 mt-1">
+            <p className="text-3xl font-extrabold text-white tracking-tight">{value}</p>
           </div>
-          {Icon && (
-            <div className="w-12 h-12 rounded-xl bg-white/20 flex items-center justify-center flex-shrink-0">
-              <Icon className="w-6 h-6 text-white" />
-            </div>
+          {subtitle && (
+            <p className="text-xs font-medium text-dim mt-2 flex items-center gap-1.5 capitalize">
+              <span className={`w-1.5 h-1.5 rounded-full ${colorClass.replace('text', 'bg').replace('400', '500')}`} />
+              {subtitle}
+            </p>
           )}
         </div>
-        {subtitle && (
-          <p className="text-sm text-white/70">{subtitle}</p>
-        )}
       </div>
     </div>
   );

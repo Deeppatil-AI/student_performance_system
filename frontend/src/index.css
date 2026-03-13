@@ -15,71 +15,160 @@
   }
   body {
     font-family: 'Inter', system-ui, sans-serif;
-    background-color: #f1f5f9;
-    color: #1e293b;
+    background-color: #0d1422;
+    color: #e2e8f0;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
-    display: block;
-    min-width: 0;
-    min-height: 0;
   }
 }
 
 @layer components {
+  /* Dark glassmorphism card - matches Student Diary */
   .card {
-    @apply bg-white rounded-2xl shadow-card p-6 transition-shadow duration-300 hover:shadow-card-lg;
+    @apply rounded-2xl p-6 transition-all duration-300;
+    background: rgba(20, 28, 46, 0.85);
+    border: 1px solid rgba(59, 130, 246, 0.12);
+    box-shadow: 0 4px 24px rgba(0, 0, 0, 0.4);
   }
+  .card:hover {
+    border-color: rgba(59, 130, 246, 0.25);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+  }
+
+  /* Blue primary button */
   .btn-primary {
-    @apply bg-primary-600 hover:bg-primary-700 active:bg-primary-800 text-white font-semibold px-5 py-2.5 rounded-xl transition-all duration-200 shadow-sm hover:shadow-md focus:outline-none focus:ring-2 focus:ring-primary-400 focus:ring-offset-2;
+    @apply bg-blue-500 hover:bg-blue-600 active:bg-blue-700 text-white font-semibold px-5 py-2.5 rounded-xl transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-offset-2 ring-offset-dark-800;
+    box-shadow: 0 0 12px rgba(59, 130, 246, 0.3);
   }
+  .btn-primary:hover {
+    box-shadow: 0 0 20px rgba(59, 130, 246, 0.5);
+  }
+
+  /* Secondary dark button */
   .btn-secondary {
-    @apply bg-surface-100 hover:bg-surface-200 text-surface-800 font-semibold px-5 py-2.5 rounded-xl transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-primary-300 focus:ring-offset-2;
+    @apply font-semibold px-5 py-2.5 rounded-xl transition-all duration-200 focus:outline-none;
+    background: rgba(30, 45, 74, 0.6);
+    border: 1px solid rgba(59, 130, 246, 0.2);
+    color: #93c5fd;
   }
+  .btn-secondary:hover {
+    background: rgba(30, 45, 74, 0.9);
+    border-color: rgba(59, 130, 246, 0.4);
+  }
+
+  /* Danger button */
   .btn-danger {
-    @apply bg-red-500 hover:bg-red-600 active:bg-red-700 text-white font-semibold px-5 py-2.5 rounded-xl transition-all duration-200;
+    @apply bg-red-600 hover:bg-red-700 text-white font-semibold px-5 py-2.5 rounded-xl transition-all duration-200;
   }
+
+  /* Dark input field */
   .input-field {
-    @apply w-full border border-surface-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-primary-400 focus:border-transparent transition-all duration-200 bg-surface-50 placeholder-slate-400;
+    @apply w-full rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-blue-400 transition-all duration-200;
+    background: rgba(10, 15, 26, 0.7);
+    border: 1px solid rgba(59, 130, 246, 0.2);
+    color: #e2e8f0;
   }
+  .input-field::placeholder {
+    color: #4a5568;
+  }
+  .input-field:focus {
+    border-color: rgba(59, 130, 246, 0.5);
+    background: rgba(10, 15, 26, 0.9);
+  }
+  .input-field:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
+  /* Label */
   .label {
-    @apply block text-sm font-medium text-slate-600 mb-1.5;
+    @apply block text-sm font-medium mb-1.5;
+    color: #93c5fd;
   }
+
+  /* Sidebar nav link */
   .nav-link {
-    @apply flex items-center gap-3 px-4 py-3 rounded-xl text-slate-500 font-medium transition-all duration-200 hover:bg-primary-50 hover:text-primary-700 cursor-pointer;
+    @apply flex items-center gap-3 px-4 py-2.5 rounded-xl font-medium transition-all duration-200 cursor-pointer text-sm;
+    color: #64748b;
+  }
+  .nav-link:hover {
+    background: rgba(59, 130, 246, 0.08);
+    color: #93c5fd;
   }
   .nav-link.active {
-    @apply bg-primary-100 text-primary-700 font-semibold;
+    background: rgba(59, 130, 246, 0.15);
+    color: #60a5fa;
+    border-left: 3px solid #3b82f6;
   }
-  .stat-badge {
-    @apply inline-flex items-center gap-1 text-xs font-semibold px-2.5 py-1 rounded-full;
-  }
+
+  /* Progress bar */
   .progress-bar {
-    @apply h-2.5 rounded-full bg-surface-200 overflow-hidden;
+    @apply h-2 rounded-full overflow-hidden;
+    background: rgba(30, 45, 74, 0.8);
   }
   .progress-fill {
     @apply h-full rounded-full transition-all duration-700;
   }
+
+  /* Stat badge */
+  .stat-badge {
+    @apply inline-flex items-center gap-1 text-xs font-semibold px-2.5 py-1 rounded-full;
+  }
+
+  /* Tech glow divider */
+  .glow-divider {
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(59,130,246,0.4), transparent);
+  }
 }
 
 @layer utilities {
+  /* Gradients matching Student Diary */
   .gradient-primary {
-    background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+    background: linear-gradient(135deg, #2563eb 0%, #3b82f6 100%);
   }
   .gradient-teal {
-    background: linear-gradient(135deg, #14b8a6 0%, #06b6d4 100%);
+    background: linear-gradient(135deg, #0d9488 0%, #06b6d4 100%);
   }
   .gradient-amber {
-    background: linear-gradient(135deg, #f59e0b 0%, #f97316 100%);
+    background: linear-gradient(135deg, #d97706 0%, #f59e0b 100%);
   }
   .gradient-rose {
-    background: linear-gradient(135deg, #f43f5e 0%, #ec4899 100%);
+    background: linear-gradient(135deg, #be123c 0%, #f43f5e 100%);
   }
   .gradient-green {
-    background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%);
+    background: linear-gradient(135deg, #15803d 0%, #22c55e 100%);
   }
+  .gradient-violet {
+    background: linear-gradient(135deg, #7c3aed 0%, #a855f7 100%);
+  }
+
+  /* Glassmorphism */
   .glass {
-    background: rgba(255,255,255,0.7);
-    backdrop-filter: blur(12px);
-    border: 1px solid rgba(255,255,255,0.4);
+    background: rgba(14, 22, 40, 0.7);
+    backdrop-filter: blur(16px);
+    border: 1px solid rgba(59, 130, 246, 0.15);
   }
+
+  /* Tech circuit background texture identical to Student Diary */
+  .tech-bg {
+    position: relative;
+  }
+  .tech-bg::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image:
+      radial-gradient(ellipse at 20% 40%, rgba(59,130,246,0.06) 0%, transparent 55%),
+      radial-gradient(ellipse at 80% 10%, rgba(99,102,241,0.05) 0%, transparent 50%),
+      radial-gradient(ellipse at 60% 80%, rgba(20,184,166,0.04) 0%, transparent 50%);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* Scrollbar */
+  .scrollbar-dark::-webkit-scrollbar { width: 6px; }
+  .scrollbar-dark::-webkit-scrollbar-track { background: transparent; }
+  .scrollbar-dark::-webkit-scrollbar-thumb { background: rgba(59,130,246,0.2); border-radius: 8px; }
+  .scrollbar-dark::-webkit-scrollbar-thumb:hover { background: rgba(59,130,246,0.35); }
 }

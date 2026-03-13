@@ -1,130 +1,191 @@
 import { useState } from 'react';
-import CodingActivityCard from '../components/CodingActivityCard';
-import { Code2, Plus, Flame, TrendingUp, Trophy } from 'lucide-react';
-
-const initialPlatforms = [
-  { id: 1, platform: 'LeetCode',   solved: 148, streak: 7,  weeklyGoal: 7,  weeklyDone: 5 },
-  { id: 2, platform: 'CodeForces', solved: 63,  streak: 3,  weeklyGoal: 5,  weeklyDone: 3 },
-  { id: 3, platform: 'HackerRank', solved: 92,  streak: 12, weeklyGoal: 5,  weeklyDone: 5 },
-];
-
-const weekDays = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
-const dailySolved = [3, 5, 2, 7, 4, 6, 0]; // problems solved each day this week
-
-let nextPId = 4;
+import { 
+  CheckCircle2, 
+  Target, 
+  Trophy, 
+  Code2, 
+  ChevronRight, 
+  Zap, 
+  Globe, 
+  Terminal,
+  BarChart3,
+  Award,
+  Star,
+  Activity
+} from 'lucide-react';
 
 export default function CodingActivity() {
-  const [platforms, setPlatforms] = useState(initialPlatforms);
-  const [adding, setAdding] = useState(false);
-  const [form, setForm] = useState({ platform: '', solved: '', streak: '', weeklyGoal: '', weeklyDone: '' });
+  const [activeTab, setActiveTab] = useState('monthly');
 
-  const totalSolved = platforms.reduce((a, p) => a + p.solved, 0);
-  const maxStreak   = Math.max(...platforms.map((p) => p.streak));
+  const topStats = [
+    { label: 'Total Solved', value: '1,248', change: '+12% growth', icon: CheckCircle2, color: 'text-emerald-400', bg: 'bg-emerald-500/10' },
+    { label: 'Monthly Target', value: '85.4%', change: '+5.2% accuracy', icon: Target, color: 'text-blue-400', bg: 'bg-blue-500/10' },
+    { label: 'Global Rank', value: '#2,415', change: 'Top 5%', icon: Trophy, color: 'text-amber-400', bg: 'bg-amber-500/10' },
+  ];
 
-  const addPlatform = () => {
-    const { platform, solved, streak, weeklyGoal, weeklyDone } = form;
-    if (!platform.trim()) return;
-    setPlatforms((p) => [...p, {
-      id: nextPId++,
-      platform,
-      solved:     +solved || 0,
-      streak:     +streak || 0,
-      weeklyGoal: +weeklyGoal || 5,
-      weeklyDone: +weeklyDone || 0,
-    }]);
-    setForm({ platform: '', solved: '', streak: '', weeklyGoal: '', weeklyDone: '' });
-    setAdding(false);
-  };
+  const platforms = [
+    { name: 'LeetCode', rank: 'Knight', solved: 542, total: 1000, color: 'bg-amber-500', text: 'text-amber-500', icon: Code2 },
+    { name: 'HackerRank', rank: '5 Star', solved: 420, total: 500, color: 'bg-emerald-500', text: 'text-emerald-500', icon: CheckCircle2 },
+    { name: 'CodeChef', rank: '3 Star', solved: 286, total: 600, color: 'bg-rose-500', text: 'text-rose-500', icon: Award },
+  ];
 
-  const logProblem = (id) => {
-    setPlatforms((prev) =>
-      prev.map((p) => p.id === id ? { ...p, solved: p.solved + 1, weeklyDone: Math.min(p.weeklyDone + 1, p.weeklyGoal) } : p)
-    );
-  };
+  const difficultyStats = [
+    { label: 'EASY', value: '642', trend: '↑ 14%', color: 'text-emerald-400' },
+    { label: 'MEDIUM', value: '412', trend: '↑ 8%', color: 'text-blue-400' },
+    { label: 'HARD', value: '194', trend: '→ 0%', color: 'text-rose-400' },
+    { label: 'POINTS', value: '42.5k', unit: 'XP', color: 'text-amber-400' },
+  ];
 
-  const maxBar = Math.max(...dailySolved, 1);
+  // Mock data for stacked bar chart: Jan to Dec
+  const chartData = [
+    { month: 'JAN', leet: 40, hacker: 30, chef: 20 },
+    { month: 'FEB', leet: 55, hacker: 25, chef: 35 },
+    { month: 'MAR', leet: 45, hacker: 20, chef: 15 },
+    { month: 'APR', leet: 70, hacker: 40, chef: 30 },
+    { month: 'MAY', leet: 60, hacker: 35, chef: 25 },
+    { month: 'JUN', leet: 40, hacker: 30, chef: 20 },
+    { month: 'JUL', leet: 85, hacker: 45, chef: 35 },
+    { month: 'AUG', leet: 50, hacker: 30, chef: 25 },
+    { month: 'SEP', leet: 30, hacker: 20, chef: 15 },
+    { month: 'OCT', leet: 65, hacker: 40, chef: 30 },
+    { month: 'NOV', leet: 55, hacker: 30, chef: 25 },
+    { month: 'DEC', leet: 75, hacker: 45, chef: 40 },
+  ];
 
   return (
-    <div className="space-y-6 animate-slide-up">
-      {/* Summary row */}
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-5">
-        <div className="card text-center">
-          <div className="w-12 h-12 rounded-xl bg-violet-100 flex items-center justify-center mx-auto mb-3">
-            <Code2 className="w-6 h-6 text-violet-600" />
-          </div>
-          <p className="text-3xl font-bold text-violet-700">{totalSolved}</p>
-          <p className="text-sm text-slate-500 mt-1">Total Problems</p>
-        </div>
-        <div className="card text-center">
-          <div className="w-12 h-12 rounded-xl bg-orange-100 flex items-center justify-center mx-auto mb-3">
-            <Flame className="w-6 h-6 text-orange-500" />
-          </div>
-          <p className="text-3xl font-bold text-orange-600">{maxStreak}</p>
-          <p className="text-sm text-slate-500 mt-1">Best Streak (days)</p>
-        </div>
-        <div className="card text-center">
-          <div className="w-12 h-12 rounded-xl bg-amber-100 flex items-center justify-center mx-auto mb-3">
-            <Trophy className="w-6 h-6 text-amber-600" />
-          </div>
-          <p className="text-3xl font-bold text-amber-700">{platforms.length}</p>
-          <p className="text-sm text-slate-500 mt-1">Platforms Active</p>
-        </div>
+    <div className="space-y-8 animate-slide-up pb-10">
+      {/* Header Section */}
+      <div className="space-y-2">
+        <h1 className="text-4xl font-black text-white tracking-tight uppercase">Coding Stats</h1>
+        <p className="text-dim font-medium italic">Real-time performance metrics across competitive platforms</p>
       </div>
 
-      {/* Weekly bar chart */}
-      <div className="card">
-        <div className="flex items-center gap-2 mb-5">
-          <TrendingUp className="w-5 h-5 text-primary-600" />
-          <h2 className="font-bold text-slate-700 text-sm">Weekly Activity</h2>
-          <span className="ml-auto text-xs text-slate-400">{dailySolved.reduce((a,b)=>a+b,0)} problems this week</span>
-        </div>
-        <div className="flex items-end gap-2 h-32">
-          {dailySolved.map((count, i) => (
-            <div key={i} className="flex-1 flex flex-col items-center gap-1">
-              <span className="text-xs font-semibold text-primary-600">{count > 0 ? count : ''}</span>
-              <div className="w-full rounded-t-lg gradient-primary opacity-80 transition-all duration-500"
-                   style={{ height: `${(count / maxBar) * 100}%`, minHeight: count > 0 ? '8px' : '0' }} />
-              <span className="text-xs text-slate-400">{weekDays[i]}</span>
+      {/* Top 3 Cards */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        {topStats.map((stat, i) => (
+          <div key={i} className="card p-6 border-blue-500/5 group hover:border-blue-500/20 relative overflow-hidden transition-all duration-300">
+            <div className="flex items-center justify-between mb-8 relative z-10">
+              <div className={`w-12 h-12 rounded-xl ${stat.bg} ${stat.color} flex items-center justify-center border border-white/5`}>
+                <stat.icon className="w-6 h-6" />
+              </div>
+              <span className={`px-3 py-1.5 rounded-lg text-[10px] font-black uppercase tracking-widest bg-emerald-500/10 text-emerald-400 border border-emerald-500/10`}>
+                {stat.change}
+              </span>
             </div>
-          ))}
+            <div className="relative z-10">
+              <p className="text-[10px] font-black text-dim uppercase tracking-widest mb-1">{stat.label}</p>
+              <h3 className="text-3xl font-black text-white tracking-tighter">{stat.value}</h3>
+            </div>
+            <div className="absolute -bottom-6 -right-6 w-24 h-24 rounded-full bg-white/[0.01] blur-xl" />
+          </div>
+        ))}
+      </div>
+
+      <div className="grid grid-cols-1 lg:grid-cols-7 gap-8 items-start">
+        {/* Main Chart Column */}
+        <div className="lg:col-span-5 card min-h-[500px] flex flex-col group overflow-hidden border-blue-500/5">
+          <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-12">
+            <div className="flex items-center gap-3">
+              <div className="w-1.5 h-6 bg-blue-600 rounded-full shadow-glow" />
+              <h3 className="text-xl font-black text-white tracking-tight">Performance Analytics</h3>
+            </div>
+            
+            <div className="flex p-1.5 bg-dark-900 border border-dark-700/50 rounded-2xl shadow-inner">
+              <button 
+                onClick={() => setActiveTab('weekly')}
+                className={`px-5 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all ${activeTab === 'weekly' ? 'bg-blue-600 text-white shadow-lg' : 'text-dim hover:text-white'}`}
+              >
+                Weekly
+              </button>
+              <button 
+                onClick={() => setActiveTab('monthly')}
+                className={`px-5 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all ${activeTab === 'monthly' ? 'bg-gradient-to-r from-orange-500 to-orange-600 text-white shadow-lg' : 'text-dim hover:text-white'}`}
+              >
+                Monthly
+              </button>
+            </div>
+          </div>
+
+          <div className="flex-1 flex flex-col justify-end">
+            <div className="flex items-end justify-between h-72 gap-2 md:gap-4 px-2">
+              {chartData.map((data) => (
+                <div key={data.month} className="flex-1 flex flex-col items-center group/bar max-w-[32px] h-full relative">
+                  <div className="w-full h-[85%] flex flex-col-reverse items-center gap-0.5 mb-2 group-hover:scale-y-105 transition-transform duration-500 origin-bottom group-hover:brightness-110">
+                    {/* Stacked Bars */}
+                    <div className="w-full rounded-t-sm bg-rose-500 shadow-[0_0_15px_rgba(244,63,94,0.2)]" style={{ height: `${data.chef}%` }} />
+                    <div className="w-full bg-emerald-500 shadow-[0_0_15px_rgba(16,185,129,0.2)]" style={{ height: `${data.hacker}%` }} />
+                    <div className="w-full rounded-b-sm bg-amber-500 shadow-[0_0_15px_rgba(245,158,11,0.2)]" style={{ height: `${data.leet}%` }} />
+                  </div>
+                  <span className="text-[10px] font-black text-dim tracking-tighter opacity-70 group-hover:opacity-100 transition-opacity mt-auto">
+                    {data.month}
+                  </span>
+                </div>
+              ))}
+            </div>
+          </div>
+          
+          <div className="mt-10 pt-6 border-t border-white/5 flex flex-wrap gap-6 justify-center">
+             {[
+               { label: 'LeetCode', color: 'bg-amber-500' },
+               { label: 'HackerRank', color: 'bg-emerald-500' },
+               { label: 'CodeChef', color: 'bg-rose-500' }
+             ].map(p => (
+               <div key={p.label} className="flex items-center gap-2">
+                  <div className={`w-2.5 h-2.5 rounded-full ${p.color}`} />
+                  <span className="text-[10px] font-black text-dim uppercase tracking-widest">{p.label}</span>
+               </div>
+             ))}
+          </div>
+        </div>
+
+        {/* Platform Sidebar Column */}
+        <div className="lg:col-span-2 space-y-4">
+           {platforms.map((p) => (
+             <div key={p.name} className="card p-5 border-blue-500/5 hover:border-blue-500/20 group transition-all duration-300">
+                <div className="flex items-center justify-between mb-5">
+                   <div className="flex items-center gap-3">
+                      <div className={`w-10 h-10 rounded-xl bg-dark-900 border border-dark-700 flex items-center justify-center ${p.text} group-hover:scale-110 transition-transform`}>
+                         <p.icon className="w-5 h-5" />
+                      </div>
+                      <div>
+                         <h4 className="font-black text-white text-sm">{p.name}</h4>
+                         <p className="text-[10px] font-bold text-dim uppercase tracking-tight">{p.rank}</p>
+                      </div>
+                   </div>
+                   <span className="text-[10px] font-bold text-dim uppercase opacity-50">{p.rank}</span>
+                </div>
+                
+                <div className="space-y-2">
+                   <div className="flex items-center justify-between text-[10px] font-black uppercase tracking-widest mb-1">
+                      <span className="text-dim opacity-70">{p.solved} / {p.total} SOLVED</span>
+                      <span className={p.text}>{Math.round((p.solved/p.total)*100)}%</span>
+                   </div>
+                   <div className="h-1.5 w-full bg-dark-900 rounded-full overflow-hidden border border-white/5">
+                      <div 
+                        className={`h-full ${p.color} rounded-full transition-all duration-1000 ease-out shadow-glow`}
+                        style={{ width: `${(p.solved/p.total)*100}%` }}
+                      />
+                   </div>
+                </div>
+             </div>
+           ))}
         </div>
       </div>
 
-      {/* Platform cards */}
-      <div className="flex items-center justify-between">
-        <h2 className="text-base font-bold text-slate-700">Platforms</h2>
-        <button onClick={() => setAdding((a) => !a)} className="btn-primary flex items-center gap-2 text-sm">
-          <Plus className="w-4 h-4" /> Add Platform
-        </button>
-      </div>
-
-      {adding && (
-        <div className="card space-y-3 border-2 border-primary-200 animate-fade-in">
-          <h3 className="font-semibold text-slate-700 text-sm">New Platform</h3>
-          <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
-            <input placeholder="Platform name"   value={form.platform}   onChange={(e) => setForm({ ...form, platform:   e.target.value })} className="input-field col-span-2 sm:col-span-1" />
-            <input placeholder="Problems solved"  value={form.solved}     onChange={(e) => setForm({ ...form, solved:     e.target.value })} type="number" className="input-field" />
-            <input placeholder="Current streak"  value={form.streak}     onChange={(e) => setForm({ ...form, streak:     e.target.value })} type="number" className="input-field" />
-            <input placeholder="Weekly goal"     value={form.weeklyGoal} onChange={(e) => setForm({ ...form, weeklyGoal: e.target.value })} type="number" className="input-field" />
-            <input placeholder="Done this week"  value={form.weeklyDone} onChange={(e) => setForm({ ...form, weeklyDone: e.target.value })} type="number" className="input-field" />
-          </div>
-          <div className="flex gap-2">
-            <button onClick={addPlatform} className="btn-primary text-sm">Add</button>
-            <button onClick={() => setAdding(false)} className="btn-secondary text-sm">Cancel</button>
-          </div>
-        </div>
-      )}
-
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-        {platforms.map((p) => (
-          <div key={p.id} className="space-y-2">
-            <CodingActivityCard {...p} />
-            <button
-              onClick={() => logProblem(p.id)}
-              className="w-full text-xs py-2 rounded-xl bg-violet-50 text-violet-700 font-semibold hover:bg-violet-100 transition-colors"
-            >
-              + Log Problem Solved
-            </button>
+      {/* Bottom Difficulty Row */}
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-6">
+        {difficultyStats.map((stat, i) => (
+          <div key={i} className="card p-6 border-blue-500/5 group hover:border-blue-500/20">
+            <p className="text-[10px] font-black text-dim uppercase tracking-[0.2em] mb-4">{stat.label}</p>
+            <div className="flex items-end gap-3 translate-y-2">
+               <h3 className="text-3xl font-black text-white leading-none">{stat.value}</h3>
+               {stat.unit && <span className="text-sm font-black text-dim mb-1">{stat.unit}</span>}
+               {stat.trend && (
+                 <span className={`text-[10px] font-black ${stat.trend.includes('↑') ? 'text-emerald-400' : 'text-dim'} ml-1 mb-1.5`}>
+                   {stat.trend}
+                 </span>
+               )}
+            </div>
           </div>
         ))}
       </div>
