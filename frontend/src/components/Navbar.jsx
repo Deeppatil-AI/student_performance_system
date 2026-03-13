@@ -1,8 +1,9 @@
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { Bell, Search } from 'lucide-react';
 
 export default function Navbar() {
   const location = useLocation();
+  const navigate = useNavigate();
 
   return (
     <header className="h-20 flex items-center px-8 gap-8 relative z-20 bg-dark-900/40 backdrop-blur-xl border-b border-white/5">
@@ -30,10 +31,13 @@ export default function Navbar() {
         <div className="h-8 w-px bg-white/5 mx-1" />
 
         {/* User Profile - Matching Mockup Order: Name (left), Avatar (right) */}
-        <div className="flex items-center gap-4 cursor-pointer group">
+        <div 
+          onClick={() => navigate('/profile')}
+          className="flex items-center gap-4 cursor-pointer group"
+        >
           <div className="text-right flex flex-col justify-center">
             <p className="text-sm font-black text-white leading-tight group-hover:text-blue-400 transition-colors">Rahul Sharma</p>
-            <p className="text-[10px] font-black text-dim uppercase tracking-widest mt-0.5">Student Lead</p>
+            <p className="text-[10px] font-black text-dim uppercase tracking-widest mt-0.5">Artificial Intelligence</p>
           </div>
           <div className="relative">
             <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-dark-700 to-dark-800 border border-white/10 p-0.5 overflow-hidden transition-all group-hover:scale-105 group-hover:border-blue-500/50 shadow-lg">
