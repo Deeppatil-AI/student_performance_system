@@ -19,7 +19,29 @@
     color: #e2e8f0;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+    transition: background-color 0.3s ease, color 0.3s ease;
   }
+}
+
+/* Base Light Mode Overrides */
+.light-mode body {
+  background-color: #f8fafc;
+  color: #1e293b;
+}
+
+.light-mode .bg-dark-900 { background-color: #f1f5f9; }
+.light-mode .bg-dark-800 { background-color: #ffffff; }
+.light-mode .border-dark-700 { border-color: #e2e8f0; }
+.light-mode .text-white { color: #0f172a; }
+.light-mode .text-dim { color: #64748b; }
+.light-mode .card { 
+  background: rgba(255, 255, 255, 0.9); 
+  border-color: rgba(0, 0, 0, 0.05);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03); 
+}
+.light-mode .glass {
+  background: rgba(255, 255, 255, 0.7);
+  border-color: rgba(0, 0, 0, 0.1);
 }
 
 @layer components {
