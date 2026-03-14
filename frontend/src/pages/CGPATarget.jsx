@@ -61,7 +61,7 @@ export default function CGPATarget() {
         {/* Main Column */}
         <div className="lg:col-span-2 space-y-8">
           {/* Current Standing Card */}
-          <div className="card border-blue-500/5 group hover:border-blue-500/20">
+          <div className="card border-orange-500/5 group hover:border-orange-500/20">
             <div className="flex items-center gap-3 mb-10">
               <div className="w-10 h-10 rounded-xl bg-orange-500/10 flex items-center justify-center text-orange-500">
                 <BarChart3 className="w-5 h-5" />

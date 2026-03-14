@@ -30,7 +30,7 @@ export default function Sidebar() {
       {/* Brand */}
       <div className="p-6 pb-8">
         <div className="flex items-center gap-3 group cursor-pointer">
-          <div className="w-10 h-10 rounded-lg bg-blue-600 flex items-center justify-center shadow-blue-sm group-hover:scale-110 transition-transform">
+          <div className="w-10 h-10 rounded-lg bg-orange-600 flex items-center justify-center shadow-orange-sm group-hover:scale-110 transition-transform">
             <BookOpen className="w-6 h-6 text-white" />
           </div>
           <div>
@@ -49,13 +49,13 @@ export default function Sidebar() {
             <NavLink
               key={to}
               to={to}
-              className={`nav-link group ${isActive ? 'active shadow-inner-blue' : ''}`}
+              className={`nav-link group ${isActive ? 'active shadow-inner-orange' : ''}`}
             >
-              <div className={`p-2 rounded-lg transition-colors ${isActive ? 'bg-blue-600/20 text-blue-400' : 'text-dim group-hover:text-blue-400'}`}>
+              <div className={`p-2 rounded-lg transition-colors ${isActive ? 'bg-orange-600/20 text-orange-400' : 'text-dim group-hover:text-orange-400'}`}>
                 <Icon className="w-5 h-5 flex-shrink-0" />
               </div>
               <span className="flex-1 text-sm font-medium">{label}</span>
-              {isActive && <div className="w-1 h-5 bg-blue-500 rounded-full mr-1 animate-pulse" />}
+              {isActive && <div className="w-1 h-5 bg-orange-500 rounded-full mr-1 animate-pulse" />}
             </NavLink>
           );
         })}

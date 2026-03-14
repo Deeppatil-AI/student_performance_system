@@ -1,6 +1,6 @@
-export default function StatCard({ title, value, subtitle, icon: Icon, colorClass = 'text-blue-400', bgClass = 'bg-blue-500/10' }) {
+export default function StatCard({ title, value, subtitle, icon: Icon, colorClass = 'text-orange-400', bgClass = 'bg-orange-500/10' }) {
   return (
-    <div className="card hover:shadow-blue-md group border-blue-500/5 hover:border-blue-500/20">
+    <div className="card hover:shadow-orange-md group border-orange-500/5 hover:border-orange-500/20">
       <div className="flex items-start gap-5">
         <div className={`w-14 h-14 rounded-2xl ${bgClass} flex items-center justify-center flex-shrink-0 group-hover:scale-110 transition-transform shadow-inner`}>
           {Icon && <Icon className={`w-7 h-7 ${colorClass}`} />}

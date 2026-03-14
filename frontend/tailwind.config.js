@@ -19,19 +19,19 @@ export default {
           400: '#243452',
           300: '#2a3d60',
         },
-        // Blue accent
-        blue: {
-          300: '#93c5fd',
-          400: '#60a5fa',
-          500: '#3b82f6',
-          600: '#2563eb',
-          700: '#1d4ed8',
-          glow: 'rgba(59,130,246,0.3)',
+        // Orange accent
+        orange: {
+          300: '#fdba74',
+          400: '#fb923c',
+          500: '#f97316',
+          600: '#ea580c',
+          700: '#c2410c',
+          glow: 'rgba(249,115,22,0.3)',
         },
         // Card / glass
         card: {
           DEFAULT: 'rgba(20, 28, 46, 0.85)',
-          border: 'rgba(59,130,246,0.15)',
+          border: 'rgba(249,115,22,0.15)',
           hover: 'rgba(20,28,46,0.95)',
         },
         // Text colors
@@ -54,20 +54,20 @@ export default {
         fadeIn:  { from: { opacity: 0 }, to: { opacity: 1 } },
         slideUp: { from: { opacity: 0, transform: 'translateY(16px)' }, to: { opacity: 1, transform: 'translateY(0)' } },
         slideIn: { from: { opacity: 0, transform: 'translateX(-8px)' }, to: { opacity: 1, transform: 'translateX(0)' } },
-        glow:    { from: { boxShadow: '0 0 10px rgba(59,130,246,0.2)' }, to: { boxShadow: '0 0 24px rgba(59,130,246,0.55)' } },
+        glow:    { from: { boxShadow: '0 0 10px rgba(249,115,22,0.2)' }, to: { boxShadow: '0 0 24px rgba(249,115,22,0.55)' } },
         float:   { '0%,100%': { transform: 'translateY(0)' }, '50%': { transform: 'translateY(-8px)' } },
       },
       boxShadow: {
-        'blue-sm':  '0 0 12px rgba(59,130,246,0.2)',
-        'blue-md':  '0 0 24px rgba(59,130,246,0.35)',
-        'blue-lg':  '0 0 40px rgba(59,130,246,0.5)',
+        'orange-sm':  '0 0 12px rgba(249,115,22,0.2)',
+        'orange-md':  '0 0 24px rgba(249,115,22,0.35)',
+        'orange-lg':  '0 0 40px rgba(249,115,22,0.5)',
         'card':     '0 4px 24px rgba(0,0,0,0.4)',
         'card-lg':  '0 8px 40px rgba(0,0,0,0.6)',
-        'inner-blue': 'inset 0 1px 0 rgba(59,130,246,0.1)',
+        'inner-orange': 'inset 0 1px 0 rgba(249,115,22,0.1)',
       },
       backgroundImage: {
-        'tech-grid': "linear-gradient(rgba(59,130,246,0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(59,130,246,0.03) 1px, transparent 1px)",
-        'hero-glow': "radial-gradient(ellipse at 50% 0%, rgba(59,130,246,0.15) 0%, transparent 70%)",
+        'tech-grid': "linear-gradient(rgba(249,115,22,0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(249,115,22,0.03) 1px, transparent 1px)",
+        'hero-glow': "radial-gradient(ellipse at 50% 0%, rgba(249,115,22,0.15) 0%, transparent 70%)",
       },
       backgroundSize: {
         'tech-grid': '40px 40px',

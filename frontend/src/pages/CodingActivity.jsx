@@ -19,7 +19,7 @@ export default function CodingActivity() {
 
   const topStats = [
     { label: 'Total Solved', value: '1,248', change: '+12% growth', icon: CheckCircle2, color: 'text-emerald-400', bg: 'bg-emerald-500/10' },
-    { label: 'Monthly Target', value: '85.4%', change: '+5.2% accuracy', icon: Target, color: 'text-blue-400', bg: 'bg-blue-500/10' },
+    { label: 'Monthly Target', value: '85.4%', change: '+5.2% accuracy', icon: Target, color: 'text-orange-400', bg: 'bg-orange-500/10' },
     { label: 'Global Rank', value: '#2,415', change: 'Top 5%', icon: Trophy, color: 'text-amber-400', bg: 'bg-amber-500/10' },
   ];
 
@@ -31,7 +31,7 @@ export default function CodingActivity() {
 
   const difficultyStats = [
     { label: 'EASY', value: '642', trend: '↑ 14%', color: 'text-emerald-400' },
-    { label: 'MEDIUM', value: '412', trend: '↑ 8%', color: 'text-blue-400' },
+    { label: 'MEDIUM', value: '412', trend: '↑ 8%', color: 'text-orange-400' },
     { label: 'HARD', value: '194', trend: '→ 0%', color: 'text-rose-400' },
     { label: 'POINTS', value: '42.5k', unit: 'XP', color: 'text-amber-400' },
   ];
@@ -63,7 +63,7 @@ export default function CodingActivity() {
       {/* Top 3 Cards */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         {topStats.map((stat, i) => (
-          <div key={i} className="card p-6 border-blue-500/5 group hover:border-blue-500/20 relative overflow-hidden transition-all duration-300">
+          <div key={i} className="card p-6 border-orange-500/5 group hover:border-orange-500/20 relative overflow-hidden transition-all duration-300">
             <div className="flex items-center justify-between mb-8 relative z-10">
               <div className={`w-12 h-12 rounded-xl ${stat.bg} ${stat.color} flex items-center justify-center border border-white/5`}>
                 <stat.icon className="w-6 h-6" />
@@ -83,17 +83,17 @@ export default function CodingActivity() {
 
       <div className="grid grid-cols-1 lg:grid-cols-7 gap-8 items-start">
         {/* Main Chart Column */}
-        <div className="lg:col-span-5 card min-h-[500px] flex flex-col group overflow-hidden border-blue-500/5">
+        <div className="lg:col-span-5 card min-h-[500px] flex flex-col group overflow-hidden border-orange-500/5">
           <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-12">
             <div className="flex items-center gap-3">
-              <div className="w-1.5 h-6 bg-blue-600 rounded-full shadow-glow" />
+              <div className="w-1.5 h-6 bg-orange-600 rounded-full shadow-glow" />
               <h3 className="text-xl font-black text-white tracking-tight">Performance Analytics</h3>
             </div>
             
             <div className="flex p-1.5 bg-dark-900 border border-dark-700/50 rounded-2xl shadow-inner">
               <button 
                 onClick={() => setActiveTab('weekly')}
-                className={`px-5 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all ${activeTab === 'weekly' ? 'bg-blue-600 text-white shadow-lg' : 'text-dim hover:text-white'}`}
+                className={`px-5 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all ${activeTab === 'weekly' ? 'bg-orange-600 text-white shadow-lg' : 'text-dim hover:text-white'}`}
               >
                 Weekly
               </button>
@@ -141,7 +141,7 @@ export default function CodingActivity() {
         {/* Platform Sidebar Column */}
         <div className="lg:col-span-2 space-y-4">
            {platforms.map((p) => (
-             <div key={p.name} className="card p-5 border-blue-500/5 hover:border-blue-500/20 group transition-all duration-300">
+             <div key={p.name} className="card p-5 border-orange-500/5 hover:border-orange-500/20 group transition-all duration-300">
                 <div className="flex items-center justify-between mb-5">
                    <div className="flex items-center gap-3">
                       <div className={`w-10 h-10 rounded-xl bg-dark-900 border border-dark-700 flex items-center justify-center ${p.text} group-hover:scale-110 transition-transform`}>
@@ -175,7 +175,7 @@ export default function CodingActivity() {
       {/* Bottom Difficulty Row */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-6">
         {difficultyStats.map((stat, i) => (
-          <div key={i} className="card p-6 border-blue-500/5 group hover:border-blue-500/20">
+          <div key={i} className="card p-6 border-orange-500/5 group hover:border-orange-500/20">
             <p className="text-[10px] font-black text-dim uppercase tracking-[0.2em] mb-4">{stat.label}</p>
             <div className="flex items-end gap-3 translate-y-2">
                <h3 className="text-3xl font-black text-white leading-none">{stat.value}</h3>

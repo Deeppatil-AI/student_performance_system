@@ -37,7 +37,7 @@ export default function AttendanceTracker() {
     <div className="space-y-8 animate-slide-up pb-10">
       {/* Header Section */}
       <div className="flex items-center gap-4">
-        <div className="w-12 h-12 rounded-xl bg-blue-600 flex items-center justify-center shadow-blue-sm">
+        <div className="w-12 h-12 rounded-xl bg-orange-600 flex items-center justify-center shadow-orange-sm">
           <BookOpen className="w-7 h-7 text-white" />
         </div>
         <div>
@@ -49,18 +49,18 @@ export default function AttendanceTracker() {
       {/* Date Control Card */}
       <div className="card py-4 px-6 flex items-center justify-between">
         <div className="flex items-center gap-4">
-          <CalendarIcon className="w-5 h-5 text-blue-400" />
+          <CalendarIcon className="w-5 h-5 text-orange-400" />
           <h3 className="font-bold text-white text-lg">{formattedDate}</h3>
-          <div className="bg-dark-900 border border-dark-600 rounded-lg p-1 px-2 flex items-center gap-2 cursor-pointer hover:border-blue-500 transition-colors">
+          <div className="bg-dark-900 border border-dark-600 rounded-lg p-1 px-2 flex items-center gap-2 cursor-pointer hover:border-orange-500 transition-colors">
              <span className="text-xs text-dim">12/03/2026</span>
              <CalendarIcon className="w-3.5 h-3.5 text-dim" />
           </div>
         </div>
         
         <div className="flex items-center gap-3">
-           <div className="bg-blue-600/10 border border-blue-600/30 px-3 py-1.5 rounded-full flex items-center gap-2 animate-pulse shadow-glow">
-              <Zap className="w-3.5 h-3.5 text-blue-400 fill-blue-400" />
-              <span className="text-[10px] font-black tracking-widest text-blue-400 uppercase">Live: 00:35</span>
+           <div className="bg-orange-600/10 border border-orange-600/30 px-3 py-1.5 rounded-full flex items-center gap-2 animate-pulse shadow-glow">
+              <Zap className="w-3.5 h-3.5 text-orange-400 fill-blue-400" />
+              <span className="text-[10px] font-black tracking-widest text-orange-400 uppercase">Live: 00:35</span>
            </div>
         </div>
       </div>
@@ -68,7 +68,7 @@ export default function AttendanceTracker() {
       {/* Lectures List */}
       <div className="space-y-4">
         <h3 className="text-lg font-black text-white flex items-center gap-3 lowercase ml-2">
-           <Clock className="w-5 h-5 text-blue-400" />
+           <Clock className="w-5 h-5 text-orange-400" />
            Thursday's Lectures
         </h3>
 
@@ -76,7 +76,7 @@ export default function AttendanceTracker() {
           {lectureList.map((lec) => (
             <div 
               key={lec.id} 
-              className={`card group hover:shadow-blue-sm transition-all border-l-4 p-4 md:p-6 ${
+              className={`card group hover:shadow-orange-sm transition-all border-l-4 p-4 md:p-6 ${
                 lec.status === 'present' ? 'border-l-green-500' : 
                 lec.status === 'absent' ? 'border-l-red-500' : 
                 'border-l-transparent'
@@ -105,7 +105,7 @@ export default function AttendanceTracker() {
                         <User className="w-3.5 h-3.5 text-dim" />
                         <span className="text-xs font-semibold text-dim">{lec.prof}</span>
                         {lec.lab && (
-                          <span className="text-[10px] bg-dark-900 border border-dark-600 px-1.5 py-0.5 rounded text-blue-400 font-bold">
+                          <span className="text-[10px] bg-dark-900 border border-dark-600 px-1.5 py-0.5 rounded text-orange-400 font-bold">
                             {lec.lab}
                           </span>
                         )}

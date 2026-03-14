@@ -16,7 +16,7 @@ import {
 
 export default function Dashboard() {
   const stats = [
-    { label: 'Attendance', value: '94.2%', change: '+2.5%', icon: Calendar, color: 'text-blue-400', bg: 'bg-blue-600/10', trend: 'up' },
+    { label: 'Attendance', value: '94.2%', change: '+2.5%', icon: Calendar, color: 'text-orange-400', bg: 'bg-orange-600/10', trend: 'up' },
     { label: 'Tasks Completed', value: '128', change: '-4.0%', icon: CheckCircle2, color: 'text-orange-400', bg: 'bg-orange-600/10', trend: 'down' },
     { label: 'Open Problems', value: '42', change: '-10.2%', icon: Bug, color: 'text-violet-400', bg: 'bg-violet-600/10', trend: 'down' },
     { label: 'Coding Hours', value: '320h', change: '+15%', icon: Code2, color: 'text-emerald-400', bg: 'bg-emerald-600/10', trend: 'up' },
@@ -25,7 +25,7 @@ export default function Dashboard() {
   const activity = [
     { id: 1, title: 'Merged PR #1240 into main', time: '2 hours ago', repo: 'student_performance_system', icon: GitPullRequest, color: 'text-orange-400', bg: 'bg-orange-400/10' },
     { id: 2, title: 'Deployment successful', time: '5 hours ago', env: 'Staging', icon: Rocket, color: 'text-emerald-400', bg: 'bg-emerald-400/10' },
-    { id: 3, title: 'Added 3 new members to Frontend Team', time: 'Yesterday at 4:32 PM', icon: UserPlus, color: 'text-blue-400', bg: 'bg-blue-400/10' },
+    { id: 3, title: 'Added 3 new members to Frontend Team', time: 'Yesterday at 4:32 PM', icon: UserPlus, color: 'text-orange-400', bg: 'bg-orange-400/10' },
   ];
 
   return (
@@ -33,7 +33,7 @@ export default function Dashboard() {
       {/* 4 Block Stats Row */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         {stats.map((s, i) => (
-          <div key={i} className="card p-5 border-white/5 hover:border-blue-500/20 group relative overflow-hidden transition-all duration-500">
+          <div key={i} className="card p-5 border-white/5 hover:border-orange-500/20 group relative overflow-hidden transition-all duration-500">
             <div className="flex items-start justify-between relative z-10">
               <div className={`w-12 h-12 rounded-xl ${s.bg} flex items-center justify-center ${s.color} shadow-inner`}>
                 <s.icon className="w-6 h-6" />
@@ -93,7 +93,7 @@ export default function Dashboard() {
         {/* Platform Distribution - Donut Chart */}
         <div className="card lg:col-span-2 min-h-[400px] flex flex-col">
            <div className="flex items-center gap-3 mb-10">
-             <div className="w-1.5 h-5 bg-blue-600 rounded-full shadow-glow" />
+             <div className="w-1.5 h-5 bg-orange-600 rounded-full shadow-glow" />
              <h3 className="text-lg font-black text-white tracking-tight">Platform Distribution</h3>
            </div>
            
@@ -101,9 +101,9 @@ export default function Dashboard() {
               <div className="relative w-48 h-48">
                  <svg className="w-full h-full transform -rotate-90">
                     <circle cx="96" cy="96" r="80" stroke="#1e2d4a" strokeWidth="16" fill="transparent" />
-                    <circle cx="96" cy="96" r="80" stroke="#2563eb" strokeWidth="16" fill="transparent" 
+                    <circle cx="96" cy="96" r="80" stroke="#ea580c" strokeWidth="16" fill="transparent" 
                       strokeDasharray="502.4" strokeDashoffset="200" strokeLinecap="round" />
-                    <circle cx="96" cy="96" r="80" stroke="#60a5fa" strokeWidth="16" fill="transparent" 
+                    <circle cx="96" cy="96" r="80" stroke="#fb923c" strokeWidth="16" fill="transparent" 
                       strokeDasharray="502.4" strokeDashoffset="400" strokeLinecap="round" />
                  </svg>
                  <div className="absolute inset-0 flex flex-col items-center justify-center">
@@ -114,9 +114,9 @@ export default function Dashboard() {
 
               <div className="grid grid-cols-1 gap-3 w-full max-w-[140px]">
                  {[
-                   { label: 'LeetCode', color: 'bg-blue-600' },
-                   { label: 'HackerRank', color: 'bg-blue-500' },
-                   { label: 'CodeChef', color: 'bg-blue-300' },
+                   { label: 'LeetCode', color: 'bg-orange-600' },
+                   { label: 'HackerRank', color: 'bg-orange-500' },
+                   { label: 'CodeChef', color: 'bg-orange-300' },
                  ].map(p => (
                    <div key={p.label} className="flex items-center justify-between group cursor-pointer">
                       <div className="flex items-center gap-3">
@@ -136,7 +136,7 @@ export default function Dashboard() {
         <div className="card lg:col-span-3 flex flex-col min-h-[350px]">
            <div className="flex items-center justify-between mb-8">
               <h3 className="text-lg font-black text-white tracking-tight">Recent Activity</h3>
-              <button className="text-[10px] font-black uppercase tracking-widest text-blue-400 hover:text-blue-300 transition-colors">View All</button>
+              <button className="text-[10px] font-black uppercase tracking-widest text-orange-400 hover:text-orange-300 transition-colors">View All</button>
            </div>
            
            <div className="space-y-6">
@@ -146,9 +146,9 @@ export default function Dashboard() {
                       <item.icon className="w-5 h-5" />
                    </div>
                    <div className="flex-1 pt-1">
-                      <h4 className="text-sm font-bold text-white group-hover:text-blue-400 transition-colors">
+                      <h4 className="text-sm font-bold text-white group-hover:text-orange-400 transition-colors">
                         {item.title}
-                        {item.repo && <span className="text-blue-400 ml-1">#main</span>}
+                        {item.repo && <span className="text-orange-400 ml-1">#main</span>}
                       </h4>
                       <p className="text-xs text-dim mt-1">
                         {item.time} {item.repo && `• Repository: ${item.repo}`} {item.env && `• Environment: ${item.env}`}
@@ -166,7 +166,7 @@ export default function Dashboard() {
               <h3 className="text-lg font-black text-white tracking-tight">Quick Tips</h3>
            </div>
            
-           <div className="card bg-blue-500/5 border-blue-500/10 p-5 space-y-4 hover:border-blue-500/20 transition-all">
+           <div className="card bg-orange-500/5 border-orange-500/10 p-5 space-y-4 hover:border-orange-500/20 transition-all">
               <div className="flex items-center gap-3">
                  <div className="w-2 h-2 rounded-full bg-orange-500" />
                  <span className="text-[10px] font-black uppercase tracking-[0.2em] text-dim">Performance</span>

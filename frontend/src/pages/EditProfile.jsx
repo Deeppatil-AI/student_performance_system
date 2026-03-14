@@ -33,7 +33,7 @@ export default function EditProfile() {
     <div className="space-y-8 animate-slide-up pb-10">
       {/* Header Section */}
       <div className="flex items-center gap-4">
-        <div className="w-12 h-12 rounded-xl bg-blue-600 flex items-center justify-center shadow-blue-sm">
+        <div className="w-12 h-12 rounded-xl bg-orange-600 flex items-center justify-center shadow-orange-sm">
           <UserCircle className="w-7 h-7 text-white" />
         </div>
         <div>
@@ -46,18 +46,18 @@ export default function EditProfile() {
         {/* Profile Card Summary */}
         <div className="card text-center flex flex-col items-center">
            <div className="relative group mb-6">
-              <div className="w-32 h-32 rounded-full border-4 border-blue-600/20 p-1">
-                 <div className="w-full h-full rounded-full bg-dark-700 flex items-center justify-center text-5xl font-black text-blue-500 overflow-hidden shadow-inner">
+              <div className="w-32 h-32 rounded-full border-4 border-orange-600/20 p-1">
+                 <div className="w-full h-full rounded-full bg-dark-700 flex items-center justify-center text-5xl font-black text-orange-500 overflow-hidden shadow-inner">
                     RS
                  </div>
               </div>
-              <button className="absolute bottom-1 right-1 w-10 h-10 rounded-xl bg-blue-600 text-white flex items-center justify-center shadow-lg hover:scale-110 transition-all border-2 border-dark-800">
+              <button className="absolute bottom-1 right-1 w-10 h-10 rounded-xl bg-orange-600 text-white flex items-center justify-center shadow-lg hover:scale-110 transition-all border-2 border-dark-800">
                  <Camera className="w-5 h-5" />
               </button>
            </div>
            
            <h3 className="text-2xl font-black text-white">{profile.name}</h3>
-           <p className="text-blue-400 font-bold uppercase text-[10px] tracking-widest mt-1">{profile.id}</p>
+           <p className="text-orange-400 font-bold uppercase text-[10px] tracking-widest mt-1">{profile.id}</p>
            
            <div className="w-full h-px bg-dark-700 my-6" />
            
@@ -80,12 +80,12 @@ export default function EditProfile() {
         <div className="card lg:col-span-2 space-y-8">
            <div className="flex items-center justify-between">
               <div className="flex items-center gap-3">
-                <Edit2 className="w-5 h-5 text-blue-400" />
+                <Edit2 className="w-5 h-5 text-orange-400" />
                 <h3 className="font-extrabold text-white text-lg lowercase tracking-tight">Personal Information</h3>
               </div>
               <button 
                 onClick={() => setEditing(!editing)}
-                className={`text-xs font-bold uppercase tracking-widest px-4 py-2 rounded-lg transition-all ${editing ? 'bg-amber-500/10 text-amber-500 border border-amber-500/20' : 'bg-blue-600/10 text-blue-400 border border-blue-600/20'}`}
+                className={`text-xs font-bold uppercase tracking-widest px-4 py-2 rounded-lg transition-all ${editing ? 'bg-amber-500/10 text-amber-500 border border-amber-500/20' : 'bg-orange-600/10 text-orange-400 border border-orange-600/20'}`}
               >
                 {editing ? 'Cancel' : 'Edit Info'}
               </button>
@@ -95,7 +95,7 @@ export default function EditProfile() {
               <div className="space-y-2">
                  <label className="text-[10px] uppercase font-black tracking-widest text-dim px-1">Full Name</label>
                  <div className="relative">
-                    <UserCircle className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-blue-500" />
+                    <UserCircle className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-orange-500" />
                     <input 
                       name="name"
                       value={profile.name}
@@ -108,7 +108,7 @@ export default function EditProfile() {
               <div className="space-y-2">
                  <label className="text-[10px] uppercase font-black tracking-widest text-dim px-1">Email Address</label>
                  <div className="relative">
-                    <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-blue-500" />
+                    <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-orange-500" />
                     <input 
                       name="email"
                       value={profile.email}
@@ -121,7 +121,7 @@ export default function EditProfile() {
               <div className="space-y-2">
                  <label className="text-[10px] uppercase font-black tracking-widest text-dim px-1">University</label>
                  <div className="relative">
-                    <GraduationCap className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-blue-500" />
+                    <GraduationCap className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-orange-500" />
                     <input 
                       name="university"
                       value={profile.university}
@@ -134,7 +134,7 @@ export default function EditProfile() {
               <div className="space-y-2">
                  <label className="text-[10px] uppercase font-black tracking-widest text-dim px-1">Branch</label>
                  <div className="relative">
-                    <BookOpen className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-blue-500" />
+                    <BookOpen className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-orange-500" />
                     <input 
                       name="branch"
                       value={profile.branch}

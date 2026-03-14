@@ -57,7 +57,7 @@ export default function TodoList() {
       {/* Header Section */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
         <div className="flex items-center gap-4">
-          <div className="w-14 h-14 rounded-2xl bg-blue-600 flex items-center justify-center shadow-blue-md ring-1 ring-blue-400/30">
+          <div className="w-14 h-14 rounded-2xl bg-orange-600 flex items-center justify-center shadow-orange-md ring-1 ring-orange-400/30">
             <LayoutList className="w-8 h-8 text-white" />
           </div>
           <div>
@@ -67,8 +67,8 @@ export default function TodoList() {
         </div>
 
         <div className="flex items-center gap-3">
-          <div className="glass px-4 py-2 rounded-xl flex items-center gap-3 border-blue-500/10">
-            <Target className="w-4 h-4 text-blue-400" />
+          <div className="glass px-4 py-2 rounded-xl flex items-center gap-3 border-orange-500/10">
+            <Target className="w-4 h-4 text-orange-400" />
             <span className="text-xs font-bold text-white uppercase tracking-widest">{pendingCount} Pending</span>
           </div>
         </div>
@@ -77,25 +77,25 @@ export default function TodoList() {
       <div className="grid grid-cols-1 lg:grid-cols-5 gap-8 items-start">
         {/* Left Column: New Goal Form */}
         <div className="lg:col-span-2 space-y-6">
-          <div className="card border-blue-500/5 group hover:border-blue-500/20 transition-all duration-500">
+          <div className="card border-orange-500/5 group transition-all duration-500">
             <div className="flex items-center gap-3 mb-8">
-              <Plus className="w-5 h-5 text-blue-400" />
+              <Plus className="w-5 h-5 text-orange-400" />
               <h3 className="font-extrabold text-white text-sm uppercase tracking-widest">New Goal</h3>
             </div>
 
             <div className="space-y-6">
               <div className="space-y-2">
-                <label className="text-[10px] uppercase font-black tracking-[0.2em] text-blue-400/70 ml-1">Description</label>
+                <label className="text-[10px] uppercase font-black tracking-[0.2em] text-orange-400/70 ml-1">Description</label>
                 <textarea 
                   value={input}
                   onChange={(e) => setInput(e.target.value)}
                   placeholder="What needs to be done?"
-                  className="input-field min-h-[140px] resize-none scrollbar-dark focus:ring-blue-500/40"
+                  className="input-field min-h-[140px] resize-none scrollbar-dark focus:ring-orange-500/40"
                 />
               </div>
 
               <div className="space-y-2">
-                <label className="text-[10px] uppercase font-black tracking-[0.2em] text-blue-400/70 ml-1">Goal Type</label>
+                <label className="text-[10px] uppercase font-black tracking-[0.2em] text-orange-400/70 ml-1">Goal Type</label>
                 <div className="relative">
                   <select 
                     value={type}
@@ -130,23 +130,23 @@ export default function TodoList() {
         </div>
 
         {/* Right Column: Task List */}
-        <div className="lg:col-span-3 card min-h-[600px] flex flex-col p-0 overflow-hidden border-blue-500/5 hover:border-blue-500/10">
+        <div className="lg:col-span-3 card min-h-[600px] flex flex-col p-0 overflow-hidden border-orange-500/5">
           <div className="p-6 md:p-8 flex flex-col md:flex-row md:items-center justify-between gap-6 border-b border-white/5 bg-white/[0.02]">
             <div className="flex items-center gap-3">
-              <ClipboardCheck className="w-6 h-6 text-blue-400" />
+              <ClipboardCheck className="w-6 h-6 text-orange-400" />
               <h3 className="font-extrabold text-white text-lg lowercase tracking-tight">Your Tasks</h3>
             </div>
             
             <div className="flex p-1.5 bg-dark-900 border border-dark-700/50 rounded-2xl shadow-inner">
               <button 
                 onClick={() => setActiveTab('pending')}
-                className={`px-5 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all ${activeTab === 'pending' ? 'bg-blue-600 text-white shadow-lg shadow-blue-500/20' : 'text-dim hover:text-white'}`}
+                className={`px-5 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all ${activeTab === 'pending' ? 'bg-orange-600 text-white shadow-lg shadow-orange-500/20' : 'text-dim hover:text-white'}`}
               >
                 Pending ({pendingCount})
               </button>
               <button 
                 onClick={() => setActiveTab('completed')}
-                className={`px-5 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all ${activeTab === 'completed' ? 'bg-blue-600 text-white shadow-lg shadow-blue-500/20' : 'text-dim hover:text-white'}`}
+                className={`px-5 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all ${activeTab === 'completed' ? 'bg-orange-600 text-white shadow-lg shadow-orange-500/20' : 'text-dim hover:text-white'}`}
               >
                 Completed ({completedCount})
               </button>
@@ -161,7 +161,7 @@ export default function TodoList() {
                   className={`group relative p-5 rounded-2xl border transition-all duration-300 flex items-center justify-between overflow-hidden ${
                     task.completed 
                       ? 'bg-dark-800/20 border-white/5 opacity-60' 
-                      : 'bg-dark-700/30 border-dark-600/50 hover:border-blue-500/30 hover:bg-dark-700/50 hover:shadow-lg'
+                      : 'bg-dark-700/30 border-dark-600/50'
                   }`}
                 >
                   <div className="flex items-center gap-5 relative z-10">
@@ -169,20 +169,20 @@ export default function TodoList() {
                       onClick={() => toggleTask(task.id)}
                       className={`w-7 h-7 rounded-xl border-2 flex items-center justify-center transition-all duration-300 ${
                         task.completed 
-                          ? 'bg-blue-600 border-blue-600 shadow-blue-sm' 
-                          : 'border-dark-500 hover:border-blue-400 group-hover:bg-blue-500/10'
+                          ? 'bg-orange-600 border-orange-600 shadow-orange-sm' 
+                          : 'border-dark-500 hover:border-orange-400 group-hover:bg-orange-500/10'
                       }`}
                     >
                       {task.completed && <CheckCircle2 className="w-5 h-5 text-white" />}
                     </button>
                     
                     <div className="space-y-1">
-                      <p className={`font-bold text-sm md:text-base leading-tight transition-all ${task.completed ? 'text-dim line-through decoration-blue-500/40' : 'text-white'}`}>
+                      <p className={`font-bold text-sm md:text-base leading-tight transition-all ${task.completed ? 'text-dim line-through decoration-orange-500/40' : 'text-white'}`}>
                         {task.text}
                       </p>
                       <div className="flex items-center flex-wrap gap-x-4 gap-y-2">
-                        <span className="text-[10px] text-blue-400 font-black uppercase tracking-widest flex items-center gap-1.5">
-                          <div className="w-1.5 h-1.5 rounded-full bg-blue-500" />
+                        <span className="text-[10px] text-orange-400 font-black uppercase tracking-widest flex items-center gap-1.5">
+                          <div className="w-1.5 h-1.5 rounded-full bg-orange-500" />
                           {task.type}
                         </span>
                         <span className="flex items-center gap-1.5 text-[10px] text-dim font-bold">
@@ -206,7 +206,7 @@ export default function TodoList() {
             ) : (
               <div className="h-full flex flex-col items-center justify-center space-y-6 py-20 animate-fade-in">
                 <div className="w-24 h-24 rounded-full bg-dark-900 flex items-center justify-center border border-dark-700 shadow-inner group">
-                  <ClipboardCheck className="w-12 h-12 text-dim/20 group-hover:text-blue-500/30 transition-colors duration-500" />
+                  <ClipboardCheck className="w-12 h-12 text-dim/20 group-hover:text-orange-500/30 transition-colors duration-500" />
                 </div>
                 <div className="text-center space-y-1">
                   <h4 className="text-white font-black text-lg tracking-tight">All caught up! Excellent work.</h4>

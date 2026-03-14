@@ -52,7 +52,7 @@ export default function StudyTimer() {
   const stats = [
     { label: 'Completed Today', value: '8 Sessions', change: '+12%', icon: CheckCircle2, color: 'text-emerald-400', bg: 'bg-emerald-500/10' },
     { label: 'Focus Time', value: '3.2 Hours', change: 'Target: 4h', icon: Clock, color: 'text-orange-400', bg: 'bg-orange-500/10' },
-    { label: 'Current Streak', value: '5 Days', icon: Zap, color: 'text-blue-400', bg: 'bg-blue-500/10' },
+    { label: 'Current Streak', value: '5 Days', icon: Zap, color: 'text-orange-400', bg: 'bg-orange-500/10' },
   ];
 
   const recentSessions = [
@@ -137,7 +137,7 @@ export default function StudyTimer() {
       {/* Stats Row */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         {stats.map((s, i) => (
-          <div key={i} className="card p-6 border-white/5 hover:border-blue-500/20 transition-all">
+          <div key={i} className="card p-6 border-white/5 hover:border-orange-500/20 transition-all">
             <div className="flex items-center justify-between mb-8">
                <div className={`w-12 h-12 rounded-2xl ${s.bg} ${s.color} flex items-center justify-center shadow-inner`}>
                   <s.icon className="w-6 h-6" />
