@@ -100,7 +100,7 @@ export default function Dashboard() {
            <div className="flex-1 flex flex-col items-center justify-center gap-12">
               <div className="relative w-48 h-48">
                  <svg className="w-full h-full transform -rotate-90">
-                    <circle cx="96" cy="96" r="80" stroke="#1e2d4a" strokeWidth="16" fill="transparent" />
+                     <circle cx="96" cy="96" r="80" strokeWidth="16" fill="transparent" className="chart-track" />
                     <circle cx="96" cy="96" r="80" stroke="#ea580c" strokeWidth="16" fill="transparent" 
                       strokeDasharray="502.4" strokeDashoffset="200" strokeLinecap="round" />
                     <circle cx="96" cy="96" r="80" stroke="#fb923c" strokeWidth="16" fill="transparent" 
