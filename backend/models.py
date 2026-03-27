@@ -12,7 +12,7 @@ class Branch(Document):
 
 class User(Document, UserMixin):
     username = StringField(max_length=150, unique=True, required=True)
-    password = StringField(max_length=150, required=True)
+    password = StringField(max_length=300, required=True)
     full_name = StringField(max_length=200)
     roll_no = StringField(max_length=50)
     prn = StringField(max_length=50)
@@ -20,6 +20,13 @@ class User(Document, UserMixin):
     photo = StringField(max_length=300)
     branch = ReferenceField(Branch)
     section = StringField(max_length=5)
+    leetcode = StringField(max_length=500)
+    hackerrank = StringField(max_length=500)
+    codechef = StringField(max_length=500)
+    github = StringField(max_length=500)
+    university = StringField(max_length=200)
+    semester = StringField(max_length=50)
+    cgpa_target = StringField(max_length=10)
     
     def get_id(self):
         return str(self.id)
@@ -59,3 +66,11 @@ class CodingStat(Document):
     platform = StringField(max_length=100, required=True)
     problems_solved = IntField(default=0)
     rating = IntField(default=0)
+
+class Notification(Document):
+    student = ReferenceField(User, required=True)
+    title = StringField(max_length=200, required=True)
+    desc = StringField(max_length=1000, required=True)
+    type = StringField(max_length=50, default='info') # danger, warning, success, info
+    read = BooleanField(default=False)
+    date_added = DateTimeField(default=datetime.utcnow)

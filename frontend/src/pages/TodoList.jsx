@@ -1,4 +1,5 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import api from '../api';
 import { 
   Plus, 
   Trash2, 
@@ -13,44 +14,66 @@ import {
 } from 'lucide-react';
 
 export default function TodoList() {
-  const [tasks, setTasks] = useState([
-    { id: 1, text: 'Complete OS Assignment', type: 'Academic', completed: false, date: 'Mar 14, 2026', priority: 'High' },
-    { id: 2, text: 'Revise DBMS Chapter 4', type: 'Study', completed: true, date: 'Mar 13, 2026', priority: 'Medium' },
-    { id: 3, text: 'Submit CN Lab Report', type: 'Academic', completed: false, date: 'Mar 14, 2026', priority: 'High' },
-  ]);
-  
+  const [tasks, setTasks] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
   const [input, setInput] = useState('');
   const [type, setType] = useState('Daily Task');
   const [activeTab, setActiveTab] = useState('pending');
 
+  useEffect(() => {
+    fetchTasks();
+  }, []);
+
+  const fetchTasks = async () => {
+    try {
+      setLoading(true);
+      const response = await api.get('/todo');
+      setTasks(response.data);
+    } catch (err) {
+      setError('Could not fetch tasks. Make sure you are logged in.');
+      console.error(err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const addTask = async () => {
+    if (!input.trim()) return;
+    try {
+      const response = await api.post('/todo', { task: input, type });
+      // Prepend the new task from backend response
+      setTasks([response.data, ...tasks]);
+      setInput('');
+    } catch (err) {
+      console.error('Error adding task:', err);
+      alert('Failed to add task.');
+    }
+  };
+
+  const toggleTask = async (id) => {
+    try {
+      await api.post(`/todo/toggle/${id}`);
+      setTasks(tasks.map(t => t.id === id ? { ...t, completed: !t.completed } : t));
+    } catch (err) {
+      console.error('Error toggling task:', err);
+    }
+  };
+
+  const deleteTask = async (id) => {
+    try {
+      await api.delete(`/todo/delete/${id}`);
+      setTasks(tasks.filter(t => t.id !== id));
+    } catch (err) {
+      console.error('Error deleting task:', err);
+    }
+  };
+
   const pendingCount = tasks.filter(t => !t.completed).length;
   const completedCount = tasks.filter(t => t.completed).length;
-  
-  const visibleTasks = tasks.filter(t => 
-    activeTab === 'pending' ? !t.completed : t.completed
-  );
-
-  const addTask = () => {
-    if (!input.trim()) return;
-    const newTask = {
-      id: Date.now(),
-      text: input,
-      type,
-      completed: false,
-      date: new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }),
-      priority: 'Medium'
-    };
-    setTasks([newTask, ...tasks]);
-    setInput('');
-  };
-
-  const toggleTask = (id) => {
-    setTasks(tasks.map(t => t.id === id ? { ...t, completed: !t.completed } : t));
-  };
-
-  const deleteTask = (id) => {
-    setTasks(tasks.filter(t => t.id !== id));
-  };
+  const visibleTasks = activeTab === 'pending' 
+    ? tasks.filter(t => !t.completed) 
+    : tasks.filter(t => t.completed);
 
   return (
     <div className="space-y-8 animate-slide-up">
@@ -154,7 +177,9 @@ export default function TodoList() {
           </div>
 
           <div className="flex-1 p-6 md:p-8 space-y-4">
-            {visibleTasks.length > 0 ? (
+            {loading ? null : error ? (
+                <div className="p-8 text-red-400 font-black uppercase tracking-[0.2em]">{error}</div>
+            ) : visibleTasks.length > 0 ? (
               visibleTasks.map((task) => (
                 <div 
                   key={task.id} 
@@ -178,7 +203,7 @@ export default function TodoList() {
                     
                     <div className="space-y-1">
                       <p className={`font-bold text-sm md:text-base leading-tight transition-all ${task.completed ? 'text-dim line-through decoration-orange-500/40' : 'text-white'}`}>
-                        {task.text}
+                        {task.task}
                       </p>
                       <div className="flex items-center flex-wrap gap-x-4 gap-y-2">
                         <span className="text-[10px] text-orange-400 font-black uppercase tracking-widest flex items-center gap-1.5">

@@ -1,8 +1,10 @@
 import { useState, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { Bell, Search, Sun, Moon } from 'lucide-react';
+import { useAuth } from '../api/AuthContext';
+import { Bell, Search, Sun, Moon, LogOut } from 'lucide-react';
 
 export default function Navbar() {
+  const { user, logout } = useAuth();
   const location = useLocation();
   const navigate = useNavigate();
   const [isDark, setIsDark] = useState(true);
@@ -39,7 +41,10 @@ export default function Navbar() {
         </button>
 
         {/* Notification Bell */}
-        <button className="relative p-2.5 rounded-xl bg-dark-800/50 border border-white/10 text-dim hover:text-white hover:bg-dark-700 transition-all group shadow-sm">
+        <button 
+          onClick={() => navigate('/notifications')}
+          className="relative p-2.5 rounded-xl bg-dark-800/50 border border-white/10 text-dim hover:text-white hover:bg-dark-700 transition-all group shadow-sm"
+        >
           <Bell className="w-5 h-5" />
           <span className="absolute top-2.5 right-2.5 w-2 h-2 bg-orange-500 rounded-full border-2 border-dark-800 group-hover:animate-ping shadow-orange-sm" />
         </button>
@@ -53,19 +58,27 @@ export default function Navbar() {
           className="flex items-center gap-4 cursor-pointer group"
         >
           <div className="text-right flex flex-col justify-center">
-            <p className="text-sm font-black text-white leading-tight group-hover:text-orange-400 transition-colors">Rahul Sharma</p>
-            <p className="text-[10px] font-black text-dim uppercase tracking-widest mt-0.5">Artificial Intelligence</p>
+            <p className="text-sm font-black text-white leading-tight group-hover:text-orange-400 transition-colors">{user?.full_name || user?.username || 'Student'}</p>
+            <p className="text-[10px] font-black text-dim uppercase tracking-widest mt-0.5">{user?.branch || 'Academics'}</p>
           </div>
           <div className="relative">
             <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-dark-700 to-dark-800 border border-white/10 p-0.5 overflow-hidden transition-all group-hover:scale-105 group-hover:border-orange-500/50 shadow-lg">
-              <div className="w-full h-full rounded-lg bg-dark-900 flex items-center justify-center text-orange-400 font-black text-xs">
-                 RS
+              <div className="w-full h-full rounded-lg bg-dark-900 flex items-center justify-center text-orange-400 font-black text-xs uppercase">
+                 {user?.username ? user.username.substring(0, 2) : 'ST'}
               </div>
             </div>
             {/* Online Status Indicator */}
             <div className="absolute -bottom-1 -right-1 w-3 h-3 bg-emerald-500 rounded-full border-2 border-dark-900 shadow-glow shadow-emerald-500/20" />
           </div>
         </div>
+
+        <button 
+          onClick={logout}
+          className="p-2.5 rounded-xl bg-red-500/5 border border-red-500/10 text-dim hover:text-red-400 hover:bg-red-500/10 transition-all shadow-sm ml-2"
+          title="Sign Out"
+        >
+          <LogOut className="w-5 h-5" />
+        </button>
       </div>
     </header>
   );

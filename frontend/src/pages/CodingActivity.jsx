@@ -16,6 +16,7 @@ import {
 
 export default function CodingActivity() {
   const [activeTab, setActiveTab] = useState('monthly');
+  const [hoveredData, setHoveredData] = useState(null);
 
   const topStats = [
     { label: 'Total Solved', value: '1,248', change: '+12% growth', icon: CheckCircle2, color: 'text-emerald-400', bg: 'bg-emerald-500/10' },
@@ -106,20 +107,85 @@ export default function CodingActivity() {
             </div>
           </div>
 
-          <div className="flex-1 flex flex-col justify-end">
-            <div className="flex items-end justify-between h-72 gap-2 md:gap-4 px-2">
-              {chartData.map((data) => (
-                <div key={data.month} className="flex-1 flex flex-col items-center group/bar max-w-[32px] h-full relative">
-                  <div className="w-full h-[85%] flex flex-col-reverse items-center gap-0.5 mb-2 group-hover:scale-y-105 transition-transform duration-500 origin-bottom group-hover:brightness-110">
-                    {/* Stacked Bars */}
-                    <div className="w-full rounded-t-sm bg-rose-500 shadow-[0_0_15px_rgba(244,63,94,0.2)]" style={{ height: `${data.chef}%` }} />
-                    <div className="w-full bg-emerald-500 shadow-[0_0_15px_rgba(16,185,129,0.2)]" style={{ height: `${data.hacker}%` }} />
-                    <div className="w-full rounded-b-sm bg-amber-500 shadow-[0_0_15px_rgba(245,158,11,0.2)]" style={{ height: `${data.leet}%` }} />
-                  </div>
-                  <span className="text-[10px] font-black text-dim tracking-tighter opacity-70 group-hover:opacity-100 transition-opacity mt-auto">
-                    {data.month}
-                  </span>
+          <div className="flex-1 min-h-[300px] relative mt-4 group/svg">
+            {/* Tooltip */}
+            {hoveredData && (
+              <div 
+                className="absolute z-50 pointer-events-none animate-fade-in"
+                style={{ 
+                  left: `${(hoveredData.index / 11) * 100}%`, 
+                  top: `${300 - (hoveredData.value * 2.5) - 60}px`,
+                  transform: 'translateX(-50%)' 
+                }}
+              >
+                <div className="bg-[#0d1422]/90 border border-white/10 backdrop-blur-md rounded-lg p-2.5 shadow-2xl min-w-[100px]">
+                   <p className="text-[10px] font-black text-dim uppercase tracking-widest mb-1">{hoveredData.month}</p>
+                   <div className="flex items-center gap-2">
+                      <div className={`w-1.5 h-1.5 rounded-full`} style={{ backgroundColor: hoveredData.color }} />
+                      <p className="text-xs font-black text-white">{hoveredData.platform}: <span className="text-orange-400">{hoveredData.value}</span></p>
+                   </div>
                 </div>
+              </div>
+            )}
+
+            {/* SVG Line Chart */}
+            <svg className="w-full h-full overflow-visible" viewBox="0 0 1000 300" preserveAspectRatio="none">
+              <defs>
+                <linearGradient id="gradient-leet" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="0%" stopColor="#f59e0b" stopOpacity="0.2" />
+                  <stop offset="100%" stopColor="#f59e0b" stopOpacity="0" />
+                </linearGradient>
+                <linearGradient id="gradient-hacker" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="0%" stopColor="#10b981" stopOpacity="0.2" />
+                  <stop offset="100%" stopColor="#10b981" stopOpacity="0" />
+                </linearGradient>
+                <linearGradient id="gradient-chef" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="0%" stopColor="#f43f5e" stopOpacity="0.2" />
+                  <stop offset="100%" stopColor="#f43f5e" stopOpacity="0" />
+                </linearGradient>
+              </defs>
+
+              {/* Grid Lines */}
+              {[0, 0.25, 0.5, 0.75, 1].map((p) => (
+                <line key={p} x1="0" y1={300 * p} x2="1000" y2={300 * p} stroke="rgba(255,255,255,0.03)" strokeWidth="1" />
+              ))}
+
+              {/* Data Lines & Areas */}
+              {['leet', 'hacker', 'chef'].map((key) => {
+                const color = key === 'leet' ? '#f59e0b' : key === 'hacker' ? '#10b981' : '#f43f5e';
+                const platformName = key === 'leet' ? 'LeetCode' : key === 'hacker' ? 'HackerRank' : 'CodeChef';
+                const points = chartData.map((d, i) => `${(i / 11) * 1000},${300 - (d[key] * 2.5)}`).join(' L ');
+                const areaPath = `M 0,300 L ${points} L 1000,300 Z`;
+                
+                return (
+                  <g key={key} className="transition-all duration-500 hover:brightness-125">
+                    <path d={areaPath} fill={`url(#gradient-${key})`} />
+                    <path d={`M ${points}`} fill="none" stroke={color} strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" className="drop-shadow-glow" />
+                    {chartData.map((d, i) => (
+                      <circle 
+                        key={i} 
+                        cx={(i / 11) * 1000} 
+                        cy={300 - (d[key] * 2.5)} 
+                        r="4" 
+                        fill="#0d1422" 
+                        stroke={color} 
+                        strokeWidth="2" 
+                        onMouseEnter={() => setHoveredData({ index: i, value: d[key], platform: platformName, month: d.month, color })}
+                        onMouseLeave={() => setHoveredData(null)}
+                        className="cursor-pointer hover:r-7 transition-all duration-200 focus:outline-none" 
+                      />
+                    ))}
+                  </g>
+                );
+              })}
+            </svg>
+
+            {/* X-Axis Labels */}
+            <div className="flex justify-between mt-6 px-1">
+              {chartData.map((data) => (
+                <span key={data.month} className="text-[10px] font-black text-dim tracking-tighter opacity-70">
+                  {data.month}
+                </span>
               ))}
             </div>
           </div>

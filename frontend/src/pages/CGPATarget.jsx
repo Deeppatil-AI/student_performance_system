@@ -12,13 +12,13 @@ import {
 } from 'lucide-react';
 
 export default function CGPATarget() {
-  const [currentCGPA, setCurrentCGPA] = useState('3.42');
-  const [creditsCompleted, setCreditsCompleted] = useState('45');
-  const [targetCGPA, setTargetCGPA] = useState('3.65');
-  const [remainingCredits, setRemainingCredits] = useState('75');
+  const [currentCGPA, setCurrentCGPA] = useState('8.42');
+  const [creditsCompleted, setCreditsCompleted] = useState('');
+  const [targetCGPA, setTargetCGPA] = useState('9.15');
+  const [remainingCredits, setRemainingCredits] = useState('');
   const [result, setResult] = useState({
-    requiredSGPA: '3.79',
-    gap: '+0.23',
+    requiredSGPA: '9.59',
+    gap: '+0.73',
     successRate: 'High',
     efficiency: '+12%',
     effort: 'Advanced Effort'
@@ -26,9 +26,9 @@ export default function CGPATarget() {
 
   const calculatePath = () => {
     const cc = parseFloat(currentCGPA);
-    const ccomp = parseFloat(creditsCompleted);
+    const ccomp = parseFloat(creditsCompleted) || 45;
     const tc = parseFloat(targetCGPA);
-    const crem = parseFloat(remainingCredits);
+    const crem = parseFloat(remainingCredits) || 75;
 
     if (isNaN(cc) || isNaN(ccomp) || isNaN(tc) || isNaN(crem)) return;
 
@@ -43,9 +43,9 @@ export default function CGPATarget() {
     setResult({
       requiredSGPA: requiredSGPA.toFixed(2),
       gap: gap >= 0 ? `+${gap}` : gap,
-      successRate: requiredSGPA <= 3.5 ? 'Very High' : requiredSGPA <= 3.85 ? 'High' : requiredSGPA <= 4.0 ? 'Possible' : 'Extreme',
+      successRate: requiredSGPA <= 8.5 ? 'Very High' : requiredSGPA <= 9.0 ? 'High' : requiredSGPA <= 9.5 ? 'Possible' : 'Extreme',
       efficiency: `+${((requiredSGPA / cc - 1) * 100).toFixed(0)}%`,
-      effort: requiredSGPA <= 3.5 ? 'Moderate' : requiredSGPA <= 3.8 ? 'Steady' : 'Advanced Effort'
+      effort: requiredSGPA <= 8.5 ? 'Moderate' : requiredSGPA <= 9.2 ? 'Steady' : 'Advanced Effort'
     });
   };
 
@@ -79,7 +79,7 @@ export default function CGPATarget() {
                     onChange={(e) => setCurrentCGPA(e.target.value)}
                     className="input-field text-xl font-bold h-16"
                   />
-                  <span className="absolute right-5 top-1/2 -translate-y-1/2 text-dim font-bold">/ 4.00</span>
+                  <span className="absolute right-5 top-1/2 -translate-y-1/2 text-dim font-bold">/ 10.00</span>
                 </div>
               </div>
 
@@ -88,6 +88,7 @@ export default function CGPATarget() {
                 <input 
                   type="number"
                   value={creditsCompleted}
+                  placeholder="45"
                   onChange={(e) => setCreditsCompleted(e.target.value)}
                   className="input-field text-xl font-bold h-16"
                 />
@@ -111,6 +112,7 @@ export default function CGPATarget() {
                 <input 
                   type="number"
                   value={remainingCredits}
+                  placeholder="75"
                   onChange={(e) => setRemainingCredits(e.target.value)}
                   className="input-field text-xl font-bold h-16"
                 />
@@ -171,7 +173,7 @@ export default function CGPATarget() {
                  <svg className="w-full h-full transform -rotate-90">
                     <circle cx="112" cy="112" r="95" stroke="rgba(255,255,255,0.05)" strokeWidth="16" fill="transparent" />
                     <circle cx="112" cy="112" r="95" stroke="#f97316" strokeWidth="16" fill="transparent" 
-                      strokeDasharray="596.6" strokeDashoffset={596.6 - (Math.min(parseFloat(result.requiredSGPA) / 4, 1) * 596.6)} 
+                      strokeDasharray="596.6" strokeDashoffset={596.6 - (Math.min(parseFloat(result.requiredSGPA) / 10, 1) * 596.6)} 
                       strokeLinecap="round" className="transition-all duration-1000 ease-out drop-shadow-glow" />
                  </svg>
                  <div className="absolute inset-0 flex flex-col items-center justify-center">

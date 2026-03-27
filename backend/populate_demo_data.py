@@ -2,7 +2,8 @@ import os
 from datetime import datetime, date, timedelta
 import random
 from mongoengine import connect
-from backend.models import User, Branch, TimetableSlot, LectureAttendance, Todo, CodingStat
+from models import User, Branch, TimetableSlot, LectureAttendance, Todo, CodingStat
+from werkzeug.security import generate_password_hash
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -11,8 +12,15 @@ connect(host=os.getenv('MONGO_URI'))
 def populate():
     user = User.objects(username='Rahul').first()
     if not user:
-        print("User Rahul not found")
-        return
+        print("User Rahul not found, creating...")
+        user = User(
+            username='Rahul',
+            password=generate_password_hash('password123'),
+            full_name='Rahul Sharma'
+        ).save()
+    else:
+        user.password = generate_password_hash('password123')
+        user.save()
 
     # 1. Profile Details
     user.full_name = "Rahul Sharma"

@@ -1,3 +1,5 @@
+import { useState, useEffect } from 'react';
+import api from '../api';
 import { 
   BarChart3, 
   Calendar, 
@@ -15,17 +17,68 @@ import {
 } from 'lucide-react';
 
 export default function Dashboard() {
+  const [data, setData] = useState(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchDashboard = async () => {
+      try {
+        const response = await api.get('/dashboard');
+        setData(response.data);
+      } catch (err) {
+        console.error('Error fetching dashboard:', err);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchDashboard();
+  }, []);
+
+  if (loading) return (
+    <div className="space-y-8 animate-fade-in pb-10">
+      {/* 4 Block Stats Row Skeleton */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        {[1,2,3,4].map(i => (
+          <div key={i} className="card p-5 border-white/5 flex flex-col gap-6">
+            <div className="flex justify-between">
+              <div className="w-12 h-12 rounded-xl skeleton" />
+              <div className="w-16 h-6 rounded-lg skeleton" />
+            </div>
+            <div className="space-y-3">
+              <div className="w-20 h-3 rounded skeleton" />
+              <div className="w-24 h-8 rounded-lg skeleton" />
+            </div>
+          </div>
+        ))}
+      </div>
+
+      {/* Charts Section Skeleton */}
+      <div className="grid grid-cols-1 lg:grid-cols-5 gap-8">
+        <div className="card lg:col-span-3 h-[400px] flex flex-col gap-6">
+            <div className="flex justify-between items-center">
+               <div className="w-40 h-6 rounded skeleton" />
+               <div className="w-24 h-10 rounded-xl skeleton" />
+            </div>
+            <div className="flex-1 rounded-2xl skeleton" />
+        </div>
+        <div className="card lg:col-span-2 h-[400px] flex flex-col gap-6 items-center justify-center">
+            <div className="w-48 h-48 rounded-full skeleton" />
+            <div className="w-32 h-20 rounded-xl skeleton" />
+        </div>
+      </div>
+    </div>
+  );
+
   const stats = [
-    { label: 'Attendance', value: '94.2%', change: '+2.5%', icon: Calendar, color: 'text-orange-400', bg: 'bg-orange-600/10', trend: 'up' },
-    { label: 'Tasks Completed', value: '128', change: '-4.0%', icon: CheckCircle2, color: 'text-orange-400', bg: 'bg-orange-600/10', trend: 'down' },
-    { label: 'Open Problems', value: '42', change: '-10.2%', icon: Bug, color: 'text-violet-400', bg: 'bg-violet-600/10', trend: 'down' },
-    { label: 'Coding Hours', value: '320h', change: '+15%', icon: Code2, color: 'text-emerald-400', bg: 'bg-emerald-600/10', trend: 'up' },
+    { label: 'Attendance', value: `${data?.overall_attendance.toFixed(1)}%` || '0%', change: '+2.5%', icon: Calendar, color: 'text-orange-400', bg: 'bg-orange-600/10', trend: 'up' },
+    { label: 'Tasks Pending', value: data?.pending_tasks_count || '0', change: '-4.0%', icon: CheckCircle2, color: 'text-orange-400', bg: 'bg-orange-600/10', trend: 'down' },
+    { label: 'Problems Solved', value: data?.total_solved || '0', change: '+15%', icon: Code2, color: 'text-emerald-400', bg: 'bg-emerald-600/10', trend: 'up' },
+    { label: 'Risk Level', value: data?.risk_profile.level || 'Unknown', change: 'Live', icon: ShieldCheck, color: data?.risk_profile.color === 'danger' ? 'text-red-400' : 'text-orange-400', bg: 'bg-orange-600/10', trend: 'up' },
   ];
 
   const activity = [
-    { id: 1, title: 'Merged PR #1240 into main', time: '2 hours ago', repo: 'student_performance_system', icon: GitPullRequest, color: 'text-orange-400', bg: 'bg-orange-400/10' },
-    { id: 2, title: 'Deployment successful', time: '5 hours ago', env: 'Staging', icon: Rocket, color: 'text-emerald-400', bg: 'bg-emerald-400/10' },
-    { id: 3, title: 'Added 3 new members to Frontend Team', time: 'Yesterday at 4:32 PM', icon: UserPlus, color: 'text-orange-400', bg: 'bg-orange-400/10' },
+    { id: 1, title: 'Attendance Record Updated', time: 'Just now', repo: 'portal', icon: GitPullRequest, color: 'text-orange-400', bg: 'bg-orange-400/10' },
+    { id: 2, title: 'Database Sync Successful', time: '5 mins ago', env: 'Cloud', icon: Rocket, color: 'text-emerald-400', bg: 'bg-emerald-400/10' },
   ];
 
   return (

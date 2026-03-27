@@ -1,4 +1,5 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import api from '../api';
 import { 
   BookOpen, 
   Calendar as CalendarIcon, 
@@ -11,22 +12,40 @@ import {
 } from 'lucide-react';
 
 export default function AttendanceTracker() {
-  const lectures = [
-    { id: 1, time: '09:20 - 10:10', slot: 'Slot 1', subject: 'PSI', type: 'TH', prof: 'Prof. A.B.Patil', status: null },
-    { id: 2, time: '10:10 - 11:00', slot: 'Slot 2', subject: 'AI', type: 'TH', prof: 'Prof. Tushant Tayade', status: 'present' },
-    { id: 3, time: '11:50 - 12:40', slot: 'Slot 3', subject: 'PL-II', type: 'PR', prof: 'Prof. S.L.Tambe', lab: 'S1', status: 'absent' },
-    { id: 4, time: '12:40 - 13:30', slot: 'Slot 4', subject: 'PL-II', type: 'PR', prof: 'Prof. S.L.Tambe', lab: 'S1', status: null },
-    { id: 5, time: '13:45 - 14:35', slot: 'Slot 5', subject: 'OE', type: 'TH', prof: 'Prof. N.A. Patil', status: null },
-    { id: 6, time: '14:35 - 15:25', slot: 'Slot 6', subject: 'OE', type: 'TH', prof: 'Prof. N.A. Patil', status: null },
-  ];
+  const [selectedDate, setSelectedDate] = useState(new Date().toISOString().split('T')[0]);
+  const [data, setData] = useState({ slots: [], day_name: '' });
+  const [loading, setLoading] = useState(true);
 
-  const [lectureList, setLectureList] = useState(lectures);
+  useEffect(() => {
+    fetchAttendance();
+  }, [selectedDate]);
 
-  const setStatus = (id, status) => {
-    setLectureList(lectureList.map(l => l.id === id ? { ...l, status } : l));
+  const fetchAttendance = async () => {
+    try {
+      setLoading(true);
+      const response = await api.get(`/attendance?date=${selectedDate}`);
+      setData(response.data);
+    } catch (err) {
+      console.error('Error fetching attendance:', err);
+    } finally {
+      setLoading(false);
+    }
   };
 
-  const formattedDate = new Date().toLocaleDateString('en-US', {
+  const handleStatusUpdate = async (slotId, status) => {
+    try {
+      await api.post(`/attendance?date=${selectedDate}`, { slot_id: slotId, status });
+      // Update local state for immediate feedback
+      setData(prev => ({
+        ...prev,
+        slots: prev.slots.map(s => s.id === slotId ? { ...s, status } : s)
+      }));
+    } catch (err) {
+      console.error('Error updating attendance:', err);
+    }
+  };
+
+  const formattedDate = new Date(selectedDate).toLocaleDateString('en-US', {
     weekday: 'long',
     day: 'numeric',
     month: 'short',
@@ -47,20 +66,22 @@ export default function AttendanceTracker() {
       </div>
 
       {/* Date Control Card */}
-      <div className="card py-4 px-6 flex items-center justify-between">
+      <div className="card py-4 px-6 flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
         <div className="flex items-center gap-4">
           <CalendarIcon className="w-5 h-5 text-orange-400" />
           <h3 className="font-bold text-white text-lg">{formattedDate}</h3>
-          <div className="bg-dark-900 border border-dark-600 rounded-lg p-1 px-2 flex items-center gap-2 cursor-pointer hover:border-orange-500 transition-colors">
-             <span className="text-xs text-dim">12/03/2026</span>
-             <CalendarIcon className="w-3.5 h-3.5 text-dim" />
-          </div>
+          <input 
+            type="date" 
+            value={selectedDate}
+            onChange={(e) => setSelectedDate(e.target.value)}
+            className="bg-dark-900 border border-dark-600 rounded-lg p-1.5 px-3 text-xs text-dim focus:border-orange-500 transition-colors outline-none"
+          />
         </div>
         
         <div className="flex items-center gap-3">
-           <div className="bg-orange-600/10 border border-orange-600/30 px-3 py-1.5 rounded-full flex items-center gap-2 animate-pulse shadow-glow">
-              <Zap className="w-3.5 h-3.5 text-orange-400 fill-blue-400" />
-              <span className="text-[10px] font-black tracking-widest text-orange-400 uppercase">Live: 00:35</span>
+           <div className="bg-orange-600/10 border border-orange-600/30 px-3 py-1.5 rounded-full flex items-center gap-2 shadow-glow">
+              <Zap className="w-3.5 h-3.5 text-orange-400" />
+              <span className="text-[10px] font-black tracking-widest text-orange-400 uppercase">Live Status Tracking</span>
            </div>
         </div>
       </div>
@@ -69,11 +90,12 @@ export default function AttendanceTracker() {
       <div className="space-y-4">
         <h3 className="text-lg font-black text-white flex items-center gap-3 lowercase ml-2">
            <Clock className="w-5 h-5 text-orange-400" />
-           Thursday's Lectures
+           {data.day_name || "Daily"}'s Lectures
         </h3>
 
+        {loading ? null : (
         <div className="space-y-3">
-          {lectureList.map((lec) => (
+          {data.slots.length > 0 ? data.slots.map((lec) => (
             <div 
               key={lec.id} 
               className={`card group hover:shadow-orange-sm transition-all border-l-4 p-4 md:p-6 ${
@@ -104,11 +126,6 @@ export default function AttendanceTracker() {
                       <div className="flex items-center gap-2 mt-1.5">
                         <User className="w-3.5 h-3.5 text-dim" />
                         <span className="text-xs font-semibold text-dim">{lec.prof}</span>
-                        {lec.lab && (
-                          <span className="text-[10px] bg-dark-900 border border-dark-600 px-1.5 py-0.5 rounded text-orange-400 font-bold">
-                            {lec.lab}
-                          </span>
-                        )}
                       </div>
                     </div>
                   </div>
@@ -116,22 +133,37 @@ export default function AttendanceTracker() {
 
                 <div className="flex items-center gap-2 self-end md:self-center">
                   <button 
-                    onClick={() => setStatus(lec.id, 'present')}
-                    className={`nav-link group py-2 md:py-3 cursor-pointer ${lec.status === 'present' ? 'bg-green-500/20 text-green-400 border border-green-500/30' : 'bg-dark-900 border border-dark-600 grayscale opacity-40 hover:grayscale-0 hover:opacity-100 hover:border-green-500'}`}
+                    onClick={() => handleStatusUpdate(lec.id, 'present')}
+                    className={`p-3 rounded-xl cursor-pointer transition-all ${lec.status === 'present' ? 'bg-green-500/20 text-green-400 border border-green-500/30' : 'bg-dark-900 border border-dark-600 text-dim grayscale opacity-40 hover:grayscale-0 hover:opacity-100 hover:border-green-500'}`}
+                    title="Mark Present"
                   >
                     <Check className={`w-5 h-5 ${lec.status === 'present' ? 'scale-125' : ''} transition-transform`} />
                   </button>
                   <button 
-                    onClick={() => setStatus(lec.id, 'absent')}
-                    className={`nav-link group py-2 md:py-3 cursor-pointer ${lec.status === 'absent' ? 'bg-red-500/20 text-red-400 border border-red-500/30' : 'bg-dark-900 border border-dark-600 grayscale opacity-40 hover:grayscale-0 hover:opacity-100 hover:border-red-500'}`}
+                    onClick={() => handleStatusUpdate(lec.id, 'absent')}
+                    className={`p-3 rounded-xl cursor-pointer transition-all ${lec.status === 'absent' ? 'bg-red-500/20 text-red-400 border border-red-500/30' : 'bg-dark-900 border border-dark-600 text-dim grayscale opacity-40 hover:grayscale-0 hover:opacity-100 hover:border-red-500'}`}
+                    title="Mark Absent"
                   >
                     <X className={`w-5 h-5 ${lec.status === 'absent' ? 'scale-125' : ''} transition-transform`} />
                   </button>
+                  {lec.status && (
+                    <button 
+                      onClick={() => handleStatusUpdate(lec.id, '')}
+                      className="p-3 text-[10px] font-black uppercase text-dim hover:text-white transition-colors"
+                    >
+                      Reset
+                    </button>
+                  )}
                 </div>
               </div>
             </div>
-          ))}
+          )) : (
+            <div className="card p-10 text-center text-dim font-black uppercase tracking-widest italic opacity-50">
+                No lectures scheduled for this day
+            </div>
+          )}
         </div>
+        )}
       </div>
     </div>
   );
